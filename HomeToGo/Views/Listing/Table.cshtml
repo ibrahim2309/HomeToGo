@@ -1,5 +1,6 @@
 @model IEnumerable<HomeToGo.Models.Listing>
 
+
 @{
     Layout = null;
 }
@@ -19,7 +20,7 @@
     <tr>
         <th>Id</th>
         <th>Title</th>
-        <th>Adress</th>
+        <th>Address</th>
         <th>Price</th>
         <th>Description</th>
     </tr>
@@ -29,7 +30,7 @@
         <tr>
             <td>@listing.ListingId</td>
             <td>@listing.Title</td>
-            <td>@listing.Adress</td>
+            <td>@listing.Address</td>
             <td>@listing.Price.ToString(("0.00 Nok"))</td>
             <td>@listing.Description</td>
             <td>@listing.ImageUrl</td>

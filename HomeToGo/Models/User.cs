@@ -1,5 +1,3 @@
-
-
 namespace HomeToGo.Models
 {
     public class User

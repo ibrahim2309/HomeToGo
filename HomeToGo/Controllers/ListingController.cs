@@ -5,6 +5,7 @@ namespace HomeToGo.Controllers;
 
 public class ListingController : Controller
 {
+    
     // GET
     public IActionResult Table()
     {
@@ -13,7 +14,7 @@ public class ListingController : Controller
         {
             ListingId = 1,
             Title = "Tjuvholem, Penthouse",
-            Adress = "Osloveien 36",
+            Address = "Osloveien 36",
             Price = 2500,
             Description = "Fin topp leilighet i midten av Oslo, Med utsikt over hele byen",
 
@@ -22,7 +23,7 @@ public class ListingController : Controller
         {
             ListingId = 2,
             Title = "Montebello, Villa",
-            Adress = "Montebelloveien 7",
+            Address = "Montebelloveien 7",
             Price = 2500,
             Description = "Stor villa i vest-kanten av Oslo, inkluderer en porche med på leie",
 
@@ -34,4 +35,23 @@ public class ListingController : Controller
         return View(listings);
 
     }
+    [HttpGet]
+    public IActionResult Create()
+    {
+        return View();
+    }
+// Kommentert til når vi har fikset DB
+   /* [HttpPost]
+    public async Task<IActionResult> Create(Listing item)
+    {
+        if (ModelState.IsValid)
+        {
+            _itemDbContext.Items.Add(item);
+            await _itemDbContext.SaveChangesAsync();
+            return RedirectToAction(nameof(Table));
+        }
+        return View(item);
+    }
+    */ 
+
 }
