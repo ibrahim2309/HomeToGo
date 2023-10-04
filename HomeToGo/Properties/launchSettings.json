@@ -11,6 +11,7 @@
     "HomeToGo": {
       "commandName": "Project",
       "launchBrowser": true,
+      "launchUrl": "listing/table",
       "applicationUrl": "https://localhost:7101;http://localhost:5173",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

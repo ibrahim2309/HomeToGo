@@ -1,0 +1,41 @@
+@model IEnumerable<HomeToGo.Models.Listing>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <title>Home To Go</title>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1>@ViewBag.CurrentViewName</h1>
+    <table class='table table-striped'>
+    <tr>
+        <th>Id</th>
+        <th>Title</th>
+        <th>Adress</th>
+        <th>Price</th>
+        <th>Description</th>
+    </tr>
+    
+    @foreach (var listing in Model)
+    {
+        <tr>
+            <td>@listing.ListingId</td>
+            <td>@listing.Title</td>
+            <td>@listing.Adress</td>
+            <td>@listing.Price.ToString(("0.00 Nok"))</td>
+            <td>@listing.Description</td>
+            <td>@listing.ImageUrl</td>
+        </tr>
+    }
+</table>
+</div>
+</body>
+</html>
