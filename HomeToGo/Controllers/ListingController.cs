@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using HomeToGo.Models;
+using HomeToGo.ViewModels;
 
 namespace HomeToGo.Controllers;
 
@@ -8,17 +9,31 @@ public class ListingController : Controller
     // GET
     public IActionResult Table()
     {
+        
         var listings = GetListings();
-        ViewBag.CurrentViewName = "Table";
-        return View(listings);
+        var listingListViewModel = new ListingListViewModel(listings, "Table");
+        return View(listingListViewModel);
 
     }
 
     public IActionResult Grid()
     {
         var listings = GetListings();
-        ViewBag.CurrentViewName = "Grid";
-        return View(listings);
+        var listingListViewModel = new ListingListViewModel(listings, "Table");
+        return View(listingListViewModel);
+    }
+
+    public IActionResult Details(int id)
+    {
+        var listings = GetListings();
+        var listing = listings.FirstOrDefault(i => i.ListingId == id);
+        if (listing == null)
+        {
+            return NotFound();
+            
+        }
+
+        return View(listing);
     }
 
     public List<Listing> GetListings()

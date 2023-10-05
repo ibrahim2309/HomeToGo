@@ -1,9 +1,8 @@
-@model IEnumerable<HomeToGo.Models.Listing>
-
+@model HomeToGo.ViewModels.ListingListViewModel
 
 
 <div class="container">
-    <h1>@ViewBag.CurrentViewName</h1>
+    <h1>@Model.CurrentViewName</h1>
     <a href="/Listing/Grid">Grid View</a>
     <table class='table table-striped'>
     <tr>
@@ -15,11 +14,13 @@
         <th></th>
     </tr>
     
-    @foreach (var listing in Model)
+    @foreach (var listing in Model.Listings)
     {
         <tr>
             <td>@listing.ListingId</td>
-            <td>@listing.Title</td>
+            <td> <a asp-controller="Listing" 
+                    asp-action="Details"
+                    asp-route-id="@listing.ListingId">@listing.Title</a></td>
             <td>@listing.Address</td>
             <td>@listing.Price.ToString(("0.00 Nok"))</td>
             <td>@listing.Description</td>
