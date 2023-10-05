@@ -31,6 +31,7 @@ public class ListingController : Controller
             Address = "Osloveien 36",
             Price = 2500,
             Description = "Fin topp leilighet i midten av Oslo, Med utsikt over hele byen",
+            ImageUrl = "/Images/Ap1.jpg"
 
         };
         var listing2 = new Listing
@@ -40,6 +41,7 @@ public class ListingController : Controller
             Address = "Montebelloveien 7",
             Price = 150,
             Description = "Stor villa i vest-kanten av Oslo, inkluderer en porche med på leie",
+            ImageUrl = "/Images/Ap2.jpg"
 
         };
         
@@ -50,6 +52,8 @@ public class ListingController : Controller
             Address = "Pilistredet 32",
             Price = 500,
             Description = "Student leilighet rett ved OsloMet",
+            ImageUrl = "/Images/Ap3.jpg"
+            
 
         };
         
@@ -60,6 +64,7 @@ public class ListingController : Controller
             Address = "Lido 1",
             Price = 4500,
             Description = "Stor kyst hus i Lido Beach Mogadishu",
+            ImageUrl = "/Images/Ap4.jpg"
 
         };
         var listing5 = new Listing
@@ -69,6 +74,7 @@ public class ListingController : Controller
             Address = "Hovster 43",
             Price = 10,
             Description = "Trap Bando ved Hovseter T-bane",
+            ImageUrl = "/Images/Ap5.jpg"
 
         };
         var listing6 = new Listing
@@ -78,6 +84,7 @@ public class ListingController : Controller
             Address = "Bjerkeveien 73",
             Price = 960 ,
             Description = "Fin leiglighet i midten av Bjerke",
+            ImageUrl = "/Images/Ap6.jpg"
 
         };
         
@@ -88,6 +95,7 @@ public class ListingController : Controller
             Address  = "Vive la Nice 7",
             Price = 3500,
             Description = "Stor villa nice, inkluderer maid som tar vare på deg",
+            ImageUrl = "/Images/Ap7.jpg"
 
         };
         var listing8 = new Listing
@@ -97,6 +105,7 @@ public class ListingController : Controller
             Address  = "chigchiga yar 12",
             Price = 7000,
             Description = "Stor Enebolig i Hargeisa",
+            ImageUrl = "/Images/Ap8.jpg"
 
         };
         

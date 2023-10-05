@@ -1,14 +1,14 @@
 @model IEnumerable<Listing>
 
     <h1>List of Listings Items (@ViewBag.CurrentViewName View)</h1>
-    <a href="/Item/Table">Grid View</a>
+    <a href="/Listing/Table">Table View</a>
 
     <div class="row row-cols-1 row-cols-md-3 g-4">
     @foreach (var listing in Model)
 {
     <div class="col">
         <div>
-        < src="@listing.ImageUrl" class="card-img-top" alt="@listing.Title">
+        <img src="@listing.ImageUrl" class="card-img-top" alt="@listing.Title">
         <div>
         <div class="d-flex justify-content-between mt-2">
         <h5 class="text-start">
