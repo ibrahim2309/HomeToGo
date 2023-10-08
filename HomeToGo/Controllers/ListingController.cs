@@ -1,42 +1,63 @@
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using HomeToGo.Models;
 using HomeToGo.ViewModels;
 
-namespace HomeToGo.Controllers;
+namespace MyShop.Controllers;
 
 public class ListingController : Controller
 {
-    // GET
+    private readonly ListingDbContext _listingDbContext;
+
+    public ListingController(ListingDbContext listingDbContext)
+    {
+        _listingDbContext = listingDbContext;
+    }
+
     public IActionResult Table()
     {
-        
-        var listings = GetListings();
+        List<Listing> listings = _listingDbContext.Listings.ToList();
         var listingListViewModel = new ListingListViewModel(listings, "Table");
         return View(listingListViewModel);
-
     }
 
     public IActionResult Grid()
     {
-        var listings = GetListings();
-        var listingListViewModel = new ListingListViewModel(listings, "Table");
+        List<Listing> listings = _listingDbContext.Listings.ToList();
+        var listingListViewModel = new ListingListViewModel(listings, "Grid");
         return View(listingListViewModel);
     }
 
     public IActionResult Details(int id)
     {
-        var listings = GetListings();
+        List<Listing> listings = _listingDbContext.Listings.ToList();
         var listing = listings.FirstOrDefault(i => i.ListingId == id);
         if (listing == null)
-        {
             return NotFound();
-            
-        }
-
         return View(listing);
     }
 
-    public List<Listing> GetListings()
+    [HttpGet]
+    public IActionResult Create()
+    {
+        return View();
+    }
+}
+// Kommentert til når vi har fikset DB
+/* [HttpPost]
+ public async Task<IActionResult> Create(Listing listing)
+ {
+     if (ModelState.IsValid)
+     {
+         _listingDbContext.Listings.Add(listing);
+         await _listingDbContext.SaveChangesAsync();
+         return RedirectToAction(nameof(Table));
+     }
+     return View(listing);
+ }
+}
+    /*public List<Listing> GetListings()
     {
         var listings = new List<Listing>();
         var listing1 = new Listing
@@ -59,7 +80,7 @@ public class ListingController : Controller
             ImageUrl = "/Images/Ap2.jpg"
 
         };
-        
+
         var listing3 = new Listing
         {
             ListingId = 3,
@@ -68,10 +89,10 @@ public class ListingController : Controller
             Price = 500,
             Description = "Student leilighet rett ved OsloMet",
             ImageUrl = "/Images/Ap3.jpg"
-            
+
 
         };
-        
+
         var listing4 = new Listing
         {
             ListingId = 4,
@@ -102,7 +123,7 @@ public class ListingController : Controller
             ImageUrl = "/Images/Ap6.jpg"
 
         };
-        
+
         var listing7 = new Listing
         {
             ListingId = 7,
@@ -123,7 +144,7 @@ public class ListingController : Controller
             ImageUrl = "/Images/Ap8.jpg"
 
         };
-        
+
         listings.Add(listing1);
         listings.Add(listing2);
         listings.Add(listing3);
@@ -134,28 +155,12 @@ public class ListingController : Controller
         listings.Add(listing8);
         return listings;
     }
-    
-    
-    [HttpGet]
-    public IActionResult Create()
-    {
-        return View();
-    }
-// Kommentert til når vi har fikset DB
-/* [HttpPost]
- public async Task<IActionResult> Create(Listing item)
- {
-     if (ModelState.IsValid)
-     {
-         _itemDbContext.Items.Add(item);
-         await _itemDbContext.SaveChangesAsync();
-         return RedirectToAction(nameof(Table));
-     }
-     return View(item);
- }
+
+
+
  */
 
 
-}
+
 
  
