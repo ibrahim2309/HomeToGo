@@ -6,22 +6,6 @@
     <div class="row row-cols-1 row-cols-md-3 g-4">
     @foreach (var listing in Model.Listings)
 {
-    <div class="col">
-        <div>
-        <img src="@listing.ImageUrl" class="card-img-top" alt="@listing.Title">
-        <div>
-        <div class="d-flex justify-content-between mt-2">
-        <h5 class="text-start">
-            <a asp-controller="Listing" 
-               asp-action="Details"
-               asp-route-id="@listing.ListingId">@listing.Title</a>
-        </h5>
-        <h5 class="text-nowrap">
-        @listing.Price.ToString("0.00 Nok")
-        </h5>
-        </div>
-        </div>
-        </div>
-        </div>
+    <partial name="_ListingCard" model="listing"/>
 }
 </div>
