@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using HomeToGo.Models;
 using HomeToGo.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace MyShop.Controllers;
 
@@ -15,23 +16,23 @@ public class ListingController : Controller
         _listingDbContext = listingDbContext;
     }
 
-    public IActionResult Table()
+    public async Task<IActionResult> Table()
     {
-        List<Listing> listings = _listingDbContext.Listings.ToList();
+        List<Listing> listings = await _listingDbContext.Listings.ToListAsync();
         var listingListViewModel = new ListingListViewModel(listings, "Table");
         return View(listingListViewModel);
     }
 
-    public IActionResult Grid()
+    public async Task<IActionResult> Grid()
     {
-        List<Listing> listings = _listingDbContext.Listings.ToList();
+        List<Listing> listings = await _listingDbContext.Listings.ToListAsync();
         var listingListViewModel = new ListingListViewModel(listings, "Grid");
         return View(listingListViewModel);
     }
 
-    public IActionResult Details(int id)
+    public async Task<IActionResult> Details(int id)
     {
-        List<Listing> listings = _listingDbContext.Listings.ToList();
+        List<Listing> listings = await _listingDbContext.Listings.ToListAsync();
         var listing = listings.FirstOrDefault(i => i.ListingId == id);
         if (listing == null)
             return NotFound();
@@ -45,12 +46,12 @@ public class ListingController : Controller
     }
 
     [HttpPost]
-    public IActionResult Create(Listing listing)
+    public async Task<IActionResult> Create(Listing listing)
     {
         if (ModelState.IsValid)
         {
             _listingDbContext.Listings.Add(listing);
-            _listingDbContext.SaveChanges();
+            await _listingDbContext.SaveChangesAsync();
             return RedirectToAction(nameof(Table));
         }
 
@@ -59,9 +60,9 @@ public class ListingController : Controller
     }
 
     [HttpGet]
-    public IActionResult Update(int id)
+    public async Task<IActionResult> Update(int id)
     {
-        var listing = _listingDbContext.Listings.Find(id);
+        var listing = await _listingDbContext.Listings.FindAsync(id);
         if (listing == null)
         {
             return NotFound();
@@ -71,12 +72,12 @@ public class ListingController : Controller
     }
 
     [HttpPost]
-    public IActionResult Update(Listing listing)
+    public async Task<IActionResult> Update(Listing listing)
     {
         if (ModelState.IsValid)
         {
             _listingDbContext.Listings.Update(listing);
-            _listingDbContext.SaveChanges();
+            await _listingDbContext.SaveChangesAsync();
             return RedirectToAction(nameof(Table));
         }
 
@@ -84,9 +85,9 @@ public class ListingController : Controller
     }
 
     [HttpGet]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> Delete(int id)
     {
-        var listing = _listingDbContext.Listings.Find(id);
+        var listing = await _listingDbContext.Listings.FindAsync(id);
         if (listing == null)
         {
             return NotFound();
@@ -97,20 +98,18 @@ public class ListingController : Controller
     }
 
     [HttpPost]
-    public IActionResult DeleteConfirmed(int id)
+    public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var listing = _listingDbContext.Listings.Find(id);
+        var listing = await _listingDbContext.Listings.FindAsync(id);
         if (listing == null)
         {
             return NotFound();
         }
 
-        _listingDbContext.Listings.Remove(listing);
-        _listingDbContext.SaveChanges();
+        _listingDbContext.Listings.Remove(listing); 
+        await _listingDbContext.SaveChangesAsync();
         return RedirectToAction(nameof(Table));
-        {
-            
-        }
+       
     }
 
 
