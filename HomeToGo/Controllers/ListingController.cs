@@ -43,6 +43,77 @@ public class ListingController : Controller
     {
         return View();
     }
+
+    [HttpPost]
+    public IActionResult Create(Listing listing)
+    {
+        if (ModelState.IsValid)
+        {
+            _listingDbContext.Listings.Add(listing);
+            _listingDbContext.SaveChanges();
+            return RedirectToAction(nameof(Table));
+        }
+
+        return View(listing);
+
+    }
+
+    [HttpGet]
+    public IActionResult Update(int id)
+    {
+        var listing = _listingDbContext.Listings.Find(id);
+        if (listing == null)
+        {
+            return NotFound();
+        }
+
+        return View(listing);
+    }
+
+    [HttpPost]
+    public IActionResult Update(Listing listing)
+    {
+        if (ModelState.IsValid)
+        {
+            _listingDbContext.Listings.Update(listing);
+            _listingDbContext.SaveChanges();
+            return RedirectToAction(nameof(Table));
+        }
+
+        return View(listing);
+    }
+
+    [HttpGet]
+    public IActionResult Delete(int id)
+    {
+        var listing = _listingDbContext.Listings.Find(id);
+        if (listing == null)
+        {
+            return NotFound();
+        }
+
+        return View(listing);
+        
+    }
+
+    [HttpPost]
+    public IActionResult DeleteConfirmed(int id)
+    {
+        var listing = _listingDbContext.Listings.Find(id);
+        if (listing == null)
+        {
+            return NotFound();
+        }
+
+        _listingDbContext.Listings.Remove(listing);
+        _listingDbContext.SaveChanges();
+        return RedirectToAction(nameof(Table));
+        {
+            
+        }
+    }
+
+
 }
 // Kommentert til når vi har fikset DB
 /* [HttpPost]

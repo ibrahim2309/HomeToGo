@@ -9,7 +9,8 @@
             <th>Address</th>
             <th>Price</th>
             <th>Description</th>
-            <th></th>
+            <th>Image</th>
+            <th>Actions</th>
         </tr>
     
         @foreach (var listing in Model)
@@ -22,8 +23,19 @@
                 <td>@listing.Address</td>
                 <td>@listing.Price.ToString(("0.00 Nok"))</td>
                 <td>@listing.Description</td>
-                <td></td>
+                <td>
+                    <img src="@listing.ImageUrl" alt="Listing Image" style="max-width: 80px; max-height: 80px;"/>
+                </td>
+                <td>
+                    <a asp-controller="Listing" asp-action="Update" asp-route-id="@listing.ListingId">Update</a>
+                    <a asp-controller="Listing" asp-action="Delete" asp-route-id="@listing.ListingId">Delete</a>
+                </td>
             </tr>
         }
     </table>
+    <p>
+        <a class="btn btn-secondary"
+           asp-controller="Listing"
+           asp-action="Create">Create New Item</a>
+    </p>
 </div>
