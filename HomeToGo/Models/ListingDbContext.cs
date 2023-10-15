@@ -1,9 +1,10 @@
 using System;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace HomeToGo.Models;
 
-public class ListingDbContext : DbContext
+public class ListingDbContext : IdentityDbContext
 {
     public ListingDbContext(DbContextOptions<ListingDbContext> options) : base(options)
     {

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using HomeToGo.Models;
 using HomeToGo.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace MyShop.Controllers;
@@ -40,12 +41,14 @@ public class ListingController : Controller
     }
 
     [HttpGet]
+    [Authorize]
     public IActionResult Create()
     {
         return View();
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Create(Listing listing)
     {
         if (ModelState.IsValid)
@@ -60,6 +63,7 @@ public class ListingController : Controller
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> Update(int id)
     {
         var listing = await _listingDbContext.Listings.FindAsync(id);
@@ -72,6 +76,7 @@ public class ListingController : Controller
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> Update(Listing listing)
     {
         if (ModelState.IsValid)
@@ -85,6 +90,7 @@ public class ListingController : Controller
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> Delete(int id)
     {
         var listing = await _listingDbContext.Listings.FindAsync(id);
@@ -98,6 +104,7 @@ public class ListingController : Controller
     }
 
     [HttpPost]
+    [Authorize]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         var listing = await _listingDbContext.Listings.FindAsync(id);
