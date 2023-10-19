@@ -6,6 +6,9 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+<<<<<<< Updated upstream
+=======
+
   <ItemGroup>
     <Compile Remove="Controllers\LoginController.cs" />
   </ItemGroup>
