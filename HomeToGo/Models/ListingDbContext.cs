@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HomeToGo.Models;
 
-public class ListingDbContext : IdentityDbContext
+public class ListingDbContext : IdentityDbContext<User>
 {
     public ListingDbContext(DbContextOptions<ListingDbContext> options) : base(options)
     {
@@ -12,4 +12,6 @@ public class ListingDbContext : IdentityDbContext
     }
 
     public DbSet<Listing> Listings { get; set; }
+    public DbSet<Reservation> Reservations { get; set; } 
+    public DbSet<ReservationListing> ReservationListings { get; set; }  
 }
