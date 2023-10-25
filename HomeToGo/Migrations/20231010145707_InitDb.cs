@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
+using System;
 
 #nullable disable
 
@@ -8,6 +9,23 @@ namespace HomeToGo.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            // Users Table
+            migrationBuilder.CreateTable(
+                name: "Users",
+                columns: table => new
+                {
+                    UserId = table.Column<int>(nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(nullable: false),
+                    Email = table.Column<string>(nullable: false),
+                    Number = table.Column<string>(nullable: false),
+                    Address = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Users", x => x.UserId);
+                });
+
             // Listings Table
             migrationBuilder.CreateTable(
                 name: "Listings",
@@ -34,7 +52,7 @@ namespace HomeToGo.Migrations
                     ReservationId = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     ReservationDate = table.Column<DateTime>(nullable: false),
-                    UserId = table.Column<string>(nullable: false),
+                    UserId = table.Column<int>(nullable: false),
                     ListingId = table.Column<int>(nullable: false),
                     CheckInDate = table.Column<DateTime>(nullable: false),
                     CheckOutDate = table.Column<DateTime>(nullable: false),
@@ -44,10 +62,10 @@ namespace HomeToGo.Migrations
                 {
                     table.PrimaryKey("PK_Reservations", x => x.ReservationId);
                     table.ForeignKey(
-                        name: "FK_Reservations_AspNetUsers_UserId",
+                        name: "FK_Reservations_Users_UserId",
                         column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
+                        principalTable: "Users",
+                        principalColumn: "UserId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Reservations_Listings_ListingId",
@@ -84,6 +102,7 @@ namespace HomeToGo.Migrations
         {
             migrationBuilder.DropTable(name: "ReservationListings");
             migrationBuilder.DropTable(name: "Reservations");
+            migrationBuilder.DropTable(name: "Users");
             migrationBuilder.DropTable(name: "Listings");
         }
     }

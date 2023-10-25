@@ -13,9 +13,8 @@ builder.Services.AddDbContext<ListingDbContext>(options => {
         builder.Configuration["ConnectionStrings:ListingDbContextConnection"]);
 });
 
-builder.Services.AddIdentity<User, IdentityRole>()
-    .AddEntityFrameworkStores<ListingDbContext>()
-    .AddDefaultTokenProviders();
+builder.Services.AddDefaultIdentity<IdentityUser>()
+    .AddEntityFrameworkStores<ListingDbContext>();
 
 builder.Services.AddRazorPages(); 
 builder.Services.AddSession();

@@ -36,8 +36,8 @@ namespace HomeToGo.Controllers
 
                 UserSelectList = users.Select(user => new SelectListItem
                 {
-                    Value = user.Id.ToString(),
-                    Text = user.UserName
+                    Value = user.UserId.ToString(),
+                    Text = user.Name
                 }).ToList(),
 
                 ListingSelectList = listings.Select(listing => new SelectListItem
@@ -90,8 +90,8 @@ namespace HomeToGo.Controllers
 
                 model.UserSelectList = users.Select(user => new SelectListItem
                 {
-                    Value = user.Id.ToString(),
-                    Text = user.UserName
+                    Value = user.UserId.ToString(),
+                    Text = user.Name
                 }).ToList();
 
                 model.ListingSelectList = listings.Select(listing => new SelectListItem
