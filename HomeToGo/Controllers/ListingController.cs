@@ -17,6 +17,12 @@ public class ListingController : Controller
         _listingDbContext = listingDbContext;
     }
 
+    public List<Reservation> ReservationsConsole()
+    {
+       return _listingDbContext.Reservations.ToList();
+       ;
+    }
+
     public async Task<IActionResult> Table()
     {
         List<Listing> listings = await _listingDbContext.Listings.ToListAsync();
@@ -41,14 +47,14 @@ public class ListingController : Controller
     }
 
     [HttpGet]
-    [Authorize]
+    //[Authorize]
     public IActionResult Create()
     {
         return View();
     }
 
     [HttpPost]
-    [Authorize]
+    //[Authorize]
     public async Task<IActionResult> Create(Listing listing)
     {
         if (ModelState.IsValid)
@@ -63,7 +69,7 @@ public class ListingController : Controller
     }
 
     [HttpGet]
-    [Authorize]
+   // [Authorize]
     public async Task<IActionResult> Update(int id)
     {
         var listing = await _listingDbContext.Listings.FindAsync(id);
@@ -76,7 +82,7 @@ public class ListingController : Controller
     }
 
     [HttpPost]
-    [Authorize]
+  //  [Authorize]
     public async Task<IActionResult> Update(Listing listing)
     {
         if (ModelState.IsValid)
@@ -90,7 +96,7 @@ public class ListingController : Controller
     }
 
     [HttpGet]
-    [Authorize]
+   // [Authorize]
     public async Task<IActionResult> Delete(int id)
     {
         var listing = await _listingDbContext.Listings.FindAsync(id);
@@ -104,7 +110,7 @@ public class ListingController : Controller
     }
 
     [HttpPost]
-    [Authorize]
+    //[Authorize]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         var listing = await _listingDbContext.Listings.FindAsync(id);

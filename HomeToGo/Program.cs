@@ -4,9 +4,12 @@ using Microsoft.AspNetCore.Identity;
 using HomeToGo.Areas.Identity.Data;
 
 var builder = WebApplication.CreateBuilder(args);
-var connectionString = builder.Configuration.GetConnectionString("ItemDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ItemDbContextConnection' not found.");
+var connectionString = builder.Configuration.GetConnectionString("ListingDbContextConnection") ?? throw new InvalidOperationException("Connection string 'ListingDbContextConnection' not found.");
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore;
+});
 
 builder.Services.AddDbContext<ListingDbContext>(options => {
     options.UseSqlite(
