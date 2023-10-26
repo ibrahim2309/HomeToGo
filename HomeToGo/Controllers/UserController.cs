@@ -1,6 +1,7 @@
 using HomeToGo.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using HomeToGo.DAL;
 
 namespace HomeToGo.Controllers;
 

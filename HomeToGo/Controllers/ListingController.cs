@@ -1,48 +1,43 @@
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using HomeToGo.Models;
 using HomeToGo.ViewModels;
+using Microsoft.AspNetCore.Mvc;
+using HomeToGo.DAL;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.EntityFrameworkCore;
 
-namespace MyShop.Controllers;
+
+namespace HomeToGo.Controllers;
 
 public class ListingController : Controller
 {
-    private readonly ListingDbContext _listingDbContext;
+    private readonly IListingRepository _listingRepository;
 
-    public ListingController(ListingDbContext listingDbContext)
+    public ListingController(IListingRepository listingRepository)
     {
-        _listingDbContext = listingDbContext;
+        _listingRepository = listingRepository;
     }
-
-    public List<Reservation> ReservationsConsole()
-    {
-       return _listingDbContext.Reservations.ToList();
-       ;
-    }
-
+    
     public async Task<IActionResult> Table()
     {
-        List<Listing> listings = await _listingDbContext.Listings.ToListAsync();
+        var listings = await _listingRepository.GetAll();
         var listingListViewModel = new ListingListViewModel(listings, "Table");
         return View(listingListViewModel);
     }
 
     public async Task<IActionResult> Grid()
     {
-        List<Listing> listings = await _listingDbContext.Listings.ToListAsync();
+        var listings = await _listingRepository.GetAll();
         var listingListViewModel = new ListingListViewModel(listings, "Grid");
         return View(listingListViewModel);
     }
 
     public async Task<IActionResult> Details(int id)
     {
-        List<Listing> listings = await _listingDbContext.Listings.ToListAsync();
-        var listing = listings.FirstOrDefault(i => i.ListingId == id);
+        var listing = await _listingRepository.GetListingById(id);
         if (listing == null)
-            return NotFound();
+        {
+            return BadRequest("Listing not found");
+        }
+
         return View(listing);
     }
 
@@ -59,8 +54,7 @@ public class ListingController : Controller
     {
         if (ModelState.IsValid)
         {
-            _listingDbContext.Listings.Add(listing);
-            await _listingDbContext.SaveChangesAsync();
+            await _listingRepository.Create(listing);
             return RedirectToAction(nameof(Table));
         }
 
@@ -71,8 +65,8 @@ public class ListingController : Controller
     [HttpGet]
    // [Authorize]
     public async Task<IActionResult> Update(int id)
-    {
-        var listing = await _listingDbContext.Listings.FindAsync(id);
+   {
+       var listing = await _listingRepository.GetListingById(id);
         if (listing == null)
         {
             return NotFound();
@@ -87,8 +81,7 @@ public class ListingController : Controller
     {
         if (ModelState.IsValid)
         {
-            _listingDbContext.Listings.Update(listing);
-            await _listingDbContext.SaveChangesAsync();
+            await _listingRepository.Update(listing);
             return RedirectToAction(nameof(Table));
         }
 
@@ -98,8 +91,8 @@ public class ListingController : Controller
     [HttpGet]
    // [Authorize]
     public async Task<IActionResult> Delete(int id)
-    {
-        var listing = await _listingDbContext.Listings.FindAsync(id);
+   {
+       var listing = await _listingRepository.GetListingById(id);
         if (listing == null)
         {
             return NotFound();
@@ -113,14 +106,13 @@ public class ListingController : Controller
     //[Authorize]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
-        var listing = await _listingDbContext.Listings.FindAsync(id);
+        var listing = await _listingRepository.GetListingById(id);
         if (listing == null)
         {
             return NotFound();
         }
 
-        _listingDbContext.Listings.Remove(listing); 
-        await _listingDbContext.SaveChangesAsync();
+        await _listingRepository.Delete(id); 
         return RedirectToAction(nameof(Table));
        
     }
@@ -133,8 +125,8 @@ public class ListingController : Controller
  {
      if (ModelState.IsValid)
      {
-         _listingDbContext.Listings.Add(listing);
-         await _listingDbContext.SaveChangesAsync();
+         _listingRepository.Listings.Add(listing);
+         await _listingRepository.SaveChangesAsync();
          return RedirectToAction(nameof(Table));
      }
      return View(listing);

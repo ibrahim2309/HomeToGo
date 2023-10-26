@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 using System;
+using HomeToGo.DAL;
 
 #nullable disable
 
