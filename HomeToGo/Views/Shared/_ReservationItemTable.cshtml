@@ -1,4 +1,4 @@
-@model IEnumerable<Listing>
+@model IEnumerable<ReservationListing>
 
 <div class="container">
     <table class='table table-striped' style='max-width: 1200px;'>
@@ -9,15 +9,12 @@
             <th>Price</th>
             <th>Description</th>
         </tr>
-        @foreach (var listing in Model)
+        
+        @foreach (var reservationListing  in Model)
         {
             <tr>
-                <td>@listing.ListingId</td>
-                <td>@listing.Title</td>
-                <td>@listing.Address</td>
-                <td>@listing.Price</td>
-                <td>@listing.Description</td>
-                <td></td>
+               <td>@reservationListing.Reservation.ListingId</td>
+               <td>@reservationListing.ReservationId</td>
             </tr>
         }
     </table>
