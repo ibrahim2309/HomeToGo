@@ -3,6 +3,7 @@ using HomeToGo.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using HomeToGo.DAL;
 using Microsoft.AspNetCore.Authorization;
+using Serilog;
 
 
 namespace HomeToGo.Controllers;
@@ -10,15 +11,26 @@ namespace HomeToGo.Controllers;
 public class ListingController : Controller
 {
     private readonly IListingRepository _listingRepository;
+    private readonly ILogger<ListingController> _logger;
+    
+    
 
-    public ListingController(IListingRepository listingRepository)
+    public ListingController(IListingRepository listingRepository, ILogger<ListingController> logger)
     {
+        
         _listingRepository = listingRepository;
+        _logger = logger;
     }
     
     public async Task<IActionResult> Table()
     {
+        
         var listings = await _listingRepository.GetAll();
+        if (listings == null)
+        {
+            _logger.LogError("[ListingController] Listing list not found while executing _listingRepository.GetAll()");
+            return NotFound("Listing list not found");
+        }
         var listingListViewModel = new ListingListViewModel(listings, "Table");
         return View(listingListViewModel);
     }
@@ -26,6 +38,11 @@ public class ListingController : Controller
     public async Task<IActionResult> Grid()
     {
         var listings = await _listingRepository.GetAll();
+        if (listings == null)
+        {
+            _logger.LogError("[ListingController] Listing list not found while executing _listingRepository.GetAll()");
+            return NotFound("Listing list not found");
+        }
         var listingListViewModel = new ListingListViewModel(listings, "Grid");
         return View(listingListViewModel);
     }
@@ -35,7 +52,8 @@ public class ListingController : Controller
         var listing = await _listingRepository.GetListingById(id);
         if (listing == null)
         {
-            return BadRequest("Listing not found");
+            _logger.LogError("[ListingController] Listing list not found while executing _listingRepository.GetAll()");
+            return NotFound("Listing list not found");
         }
 
         return View(listing);
@@ -54,10 +72,11 @@ public class ListingController : Controller
     {
         if (ModelState.IsValid)
         {
-            await _listingRepository.Create(listing);
-            return RedirectToAction(nameof(Table));
+            bool returnOk = await _listingRepository.Create(listing);
+            if (returnOk)   
+                return RedirectToAction(nameof(Table));
         }
-
+        _logger.LogWarning("[ListingController] Listing creation failed {@listing}", listing);
         return View(listing);
 
     }
@@ -69,7 +88,8 @@ public class ListingController : Controller
        var listing = await _listingRepository.GetListingById(id);
         if (listing == null)
         {
-            return NotFound();
+            _logger.LogError("[ListingController] Listing not found when updating the ListingId {ListingId:0000}", id);
+            return BadRequest("Listing not found for the ListingId");
         }
 
         return View(listing);
@@ -81,10 +101,11 @@ public class ListingController : Controller
     {
         if (ModelState.IsValid)
         {
-            await _listingRepository.Update(listing);
-            return RedirectToAction(nameof(Table));
+            bool returnOk = await _listingRepository.Update(listing);
+            if (returnOk)
+               return RedirectToAction(nameof(Table));
         }
-
+        _logger.LogWarning("[ListingController] Listing update failed {@listing}", listing);
         return View(listing);
     }
 
@@ -95,7 +116,8 @@ public class ListingController : Controller
        var listing = await _listingRepository.GetListingById(id);
         if (listing == null)
         {
-            return NotFound();
+            _logger.LogError("[ListingController] Listing not found for the ListingId {ListingId:0000}", id);
+            return BadRequest("Listing not found for the ListingId");
         }
 
         return View(listing);
@@ -109,7 +131,8 @@ public class ListingController : Controller
         var listing = await _listingRepository.GetListingById(id);
         if (listing == null)
         {
-            return NotFound();
+            _logger.LogError("[ListingController] Listing deletion failed for the ListingId {ListingId:0000}", id);
+            return BadRequest("Listing deletion failed");
         }
 
         await _listingRepository.Delete(id); 
