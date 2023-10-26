@@ -11,11 +11,13 @@ namespace HomeToGo.Controllers;
 
 public class ReservationController : Controller
 {
+    private readonly ILogger<ReservationController> _logger; 
     private readonly ListingDbContext _listingDbContext;
 
-    public ReservationController(ListingDbContext listingDbContext)
+    public ReservationController(ListingDbContext listingDbContext, ILogger<ReservationController> logger)
     {
         _listingDbContext = listingDbContext;
+        _logger = logger;
     }
 
     public async Task<IActionResult> Table()
@@ -27,6 +29,7 @@ public class ReservationController : Controller
     [HttpGet]
     public async Task<IActionResult> CreateReservation()
     {
+        
         var users = await _listingDbContext.Users.ToListAsync();
         var listings = await _listingDbContext.Listings.ToListAsync();
 
@@ -64,7 +67,8 @@ public class ReservationController : Controller
 
                 if (user == null || listing == null)
                 {
-                    return BadRequest("User or Listing not found.");
+                    _logger.LogError("[ReservationController] Reservation list not found while executing _listingRepository.GetAll()");
+                    return NotFound("Reservation list not found");
                 }
 
                 _listingDbContext.Reservations.Add(model.Reservation);
@@ -90,9 +94,10 @@ public class ReservationController : Controller
 
             return View(model); 
         }
-        catch
+        catch (Exception e)
         {
-            return BadRequest("Reservation creation failed.");
+            _logger.LogError("[ReservationController] Reservation creation failed for listing {@reservation}, error message: ", e.Message);
+            return null;
         }
     }
 
