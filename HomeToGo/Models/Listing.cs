@@ -10,6 +10,4 @@ public class Listing
     
     public string? ImageUrl { get; set; }
     
-    public virtual List<ReservationListing>? ReservationListings { get; set; }
-    
 }

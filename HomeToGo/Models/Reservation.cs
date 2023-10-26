@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Identity; 
-
 namespace HomeToGo.Models
 {
     public class Reservation
@@ -8,7 +6,6 @@ namespace HomeToGo.Models
         public DateTime ReservationDate { get; set; } = DateTime.Now;
         public int UserId { get; set; } 
         public virtual User User { get; set; } = default!; 
-        public virtual List<ReservationListing>? ReservationListings { get; set; }
         public int ListingId { get; set; }
         public virtual Listing Listing { set; get; } = default!;
         public DateTime CheckInDate { get; set; }  // Check-in date

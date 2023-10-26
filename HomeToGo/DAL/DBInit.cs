@@ -138,26 +138,7 @@ public static class DBInit
 
             context.Reservations.Add(reservation1);
             context.Reservations.Add(reservation2);
-
-            // Assuming you want to associate ReservationListings with the above reservations
-            var reservationListings = new List<ReservationListing>
-            {
-                new ReservationListing
-                {
-                    ReservationListingId = 1,
-                    ReservationId = reservation1.ReservationId,
-                    Reservation = reservation1
-                },
-                new ReservationListing
-                {
-                    ReservationListingId = 2,
-                    ReservationId = reservation2.ReservationId,
-                    Reservation = reservation2
-                }
-            };
-
-            context.ReservationListings.AddRange(reservationListings);
-            context.SaveChanges();
+            
         }
         
     }

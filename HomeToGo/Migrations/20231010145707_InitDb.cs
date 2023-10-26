@@ -75,33 +75,10 @@ namespace HomeToGo.Migrations
                         principalColumn: "ListingId",
                         onDelete: ReferentialAction.Cascade);
                 });
-
-            // ReservationListings Table
-            migrationBuilder.CreateTable(
-                name: "ReservationListings",
-                columns: table => new
-                {
-                    ReservationListingId = table.Column<int>(nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    ReservationId = table.Column<int>(nullable: false),
-                    CheckInDate = table.Column<DateTime>(nullable: false),
-                    CheckOutDate = table.Column<DateTime>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_ReservationListings", x => x.ReservationListingId);
-                    table.ForeignKey(
-                        name: "FK_ReservationListings_Reservations_ReservationId",
-                        column: x => x.ReservationId,
-                        principalTable: "Reservations",
-                        principalColumn: "ReservationId",
-                        onDelete: ReferentialAction.Cascade);
-                });
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(name: "ReservationListings");
             migrationBuilder.DropTable(name: "Reservations");
             migrationBuilder.DropTable(name: "Users");
             migrationBuilder.DropTable(name: "Listings");

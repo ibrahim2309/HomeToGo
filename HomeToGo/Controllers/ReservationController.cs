@@ -2,6 +2,9 @@ using HomeToGo.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using HomeToGo.DAL;
+using HomeToGo.ViewModels;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace HomeToGo.Controllers;
@@ -20,4 +23,79 @@ public class ReservationController : Controller
         List<Reservation> reservations = await _listingDbContext.Reservations.ToListAsync();
         return View(reservations);
     }
+    
+    [HttpGet]
+    public async Task<IActionResult> CreateReservation()
+    {
+        var users = await _listingDbContext.Users.ToListAsync();
+        var listings = await _listingDbContext.Listings.ToListAsync();
+
+        var createReservationViewModel = new CreateReservationViewModel
+        {
+            Reservation = new Reservation(),
+
+            UserSelectList = users.Select(user => new SelectListItem
+            {
+                Value = user.UserId.ToString(),
+                Text = user.Name
+            }).ToList(),
+
+            ListingSelectList = listings.Select(listing => new SelectListItem
+            {
+                Value = listing.ListingId.ToString(),
+                Text = listing.Title  
+            }).ToList(),
+        };
+
+        return View(createReservationViewModel);
+    }
+
+  
+    
+    [HttpPost]
+    public async Task<IActionResult> CreateReservation(CreateReservationViewModel model)
+    {
+        try
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _listingDbContext.Users.FindAsync(model.Reservation.UserId);
+                var listing = await _listingDbContext.Listings.FindAsync(model.Reservation.ListingId);
+
+                if (user == null || listing == null)
+                {
+                    return BadRequest("User or Listing not found.");
+                }
+
+                _listingDbContext.Reservations.Add(model.Reservation);
+                await _listingDbContext.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Table));
+            }
+
+            var users = await _listingDbContext.Users.ToListAsync();
+            var listings = await _listingDbContext.Listings.ToListAsync();
+
+            model.UserSelectList = users.Select(user => new SelectListItem
+            {
+                Value = user.UserId.ToString(),
+                Text = user.Name
+            }).ToList();
+
+            model.ListingSelectList = listings.Select(listing => new SelectListItem
+            {
+                Value = listing.ListingId.ToString(),
+                Text = listing.Title
+            }).ToList();
+
+            return View(model); 
+        }
+        catch
+        {
+            return BadRequest("Reservation creation failed.");
+        }
+    }
+
+
 }
+
