@@ -22,9 +22,33 @@ public class ReservationController : Controller
 
     public async Task<IActionResult> Table()
     {
-        List<Reservation> reservations = await _listingDbContext.Reservations.ToListAsync();
+        // Include the related Listing data for each reservation
+        List<Reservation> reservations = await _listingDbContext.Reservations
+            .Include(r => r.Listing)
+            .ToListAsync();
         return View(reservations);
     }
+    
+    
+
+    public static decimal CalculateTotalPrice(Listing listing, Reservation reservation)
+    {
+        if (listing == null || reservation == null)
+        {
+            throw new ArgumentNullException("Listing or Reservation cannot be null");
+        }
+
+        if (reservation.CheckOutDate <= reservation.CheckInDate)
+        {
+            throw new ArgumentException("CheckOutDate must be greater than CheckInDate");
+        }
+
+        TimeSpan stayDuration = reservation.CheckOutDate - reservation.CheckInDate;
+        decimal totalPrice = listing.Price * stayDuration.Days;
+
+        return totalPrice;
+    }
+
     
     [HttpGet]
     public async Task<IActionResult> CreateReservation()
@@ -60,6 +84,7 @@ public class ReservationController : Controller
     {
         try
         {
+            
             if (!ModelState.IsValid)
             {
                 var user = await _listingDbContext.Users.FindAsync(model.Reservation.UserId);
@@ -91,7 +116,8 @@ public class ReservationController : Controller
                 Value = listing.ListingId.ToString(),
                 Text = listing.Title
             }).ToList();
-
+            
+            
             return View(model); 
         }
         catch (Exception e)
