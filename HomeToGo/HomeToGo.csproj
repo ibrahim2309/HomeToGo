@@ -26,7 +26,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.9" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.15" />
-
+<<<<<<< Updated upstream
     <PackageReference Include="Serilog.Extensions.Logging.File" Version="3.0.0" />
   
 
