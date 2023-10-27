@@ -10,12 +10,26 @@ namespace HomeToGo.Controllers;
 
 public class ListingController : Controller
 {
+<<<<<<< Updated upstream
     private readonly IListingRepository _listingRepository;
     private readonly ILogger<ListingController> _logger;
     
     
 
     public ListingController(IListingRepository listingRepository, ILogger<ListingController> logger)
+=======
+    private readonly ListingDbContext _listingDbContext;
+    
+    /*private readonly ILogger<ListingController>_logger
+    
+    public ListingController(IListingRepository listingRepository, ILogger<ListingController> logger)
+    {
+        _listingRepository = listingRepository;
+        _logger = logger;
+    }
+    */
+    public ListingController(ListingDbContext listingDbContext)
+>>>>>>> Stashed changes
     {
         
         _listingRepository = listingRepository;
@@ -24,6 +38,7 @@ public class ListingController : Controller
     
     public async Task<IActionResult> Table()
     {
+<<<<<<< Updated upstream
         
         var listings = await _listingRepository.GetAll();
         if (listings == null)
@@ -31,6 +46,14 @@ public class ListingController : Controller
             _logger.LogError("[ListingController] Listing list not found while executing _listingRepository.GetAll()");
             return NotFound("Listing list not found");
         }
+=======
+       /* 
+        _logger.LogInformation("This is an information message.");
+        _logger.LogWarning("This is a warning message.");
+        _logger.LogError("This is an error message");
+        */
+        List<Listing> listings = await _listingDbContext.Listings.ToListAsync();
+>>>>>>> Stashed changes
         var listingListViewModel = new ListingListViewModel(listings, "Table");
         return View(listingListViewModel);
     }
@@ -80,7 +103,21 @@ public class ListingController : Controller
         return View(listing);
 
     }
-
+/*
+    [HttpPost]
+    public async Task<IActionResult> Create(Listing listing)
+    {
+       if (ModelState.IsValid)
+       {
+       bool returnOk = await listing_Repository.Create(listing);
+       if (returnOk)
+       return RedirectToAction(nameof(Table));
+       }
+       _logger.LogWarning(«[ListingController] Listing creation failed {@list}», list);
+       return View(list);
+    }
+    */  /* dette er Input Validation from the Client Side kode */
+    
     [HttpGet]
    // [Authorize]
     public async Task<IActionResult> Update(int id)
@@ -131,8 +168,12 @@ public class ListingController : Controller
         var listing = await _listingRepository.GetListingById(id);
         if (listing == null)
         {
+<<<<<<< Updated upstream
             _logger.LogError("[ListingController] Listing deletion failed for the ListingId {ListingId:0000}", id);
             return BadRequest("Listing deletion failed");
+=======
+            return NotFound(); 
+>>>>>>> Stashed changes
         }
 
         await _listingRepository.Delete(id); 
