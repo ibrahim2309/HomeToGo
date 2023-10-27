@@ -85,7 +85,6 @@ public class ReservationController : Controller
         try
         {
             
-            
             if (!ModelState.IsValid)
             {
                 var user = await _listingDbContext.Users.FindAsync(model.Reservation.UserId);
