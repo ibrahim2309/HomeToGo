@@ -38,6 +38,19 @@ loggerConfiguration.Filter.ByExcluding(e => e.Properties.TryGetValue("SourceCont
 var logger = loggerConfiguration.CreateLogger();
 builder.Logging.AddSerilog(logger);
 
+
+/*var loggerConfiguration = new LoggerConfiguration()
+    .MinimumLevel.Information() // levels: Trace< Information < Warning < Erorr < Fatal
+    .WriteTo.File($"Logs/app_{DateTime.Now:yyyyMMdd_HHmmss}.log"); //Save to a different file according to time//
+
+loggerConfiguration.Filter.ByExcluding(e => e.Properties.TryGetValue("SourceContext", out var value) &&
+                           e.Level == LogEventLevel.Information &&
+                           e.MessageTemplate.Text.Contains("Executed DbCommand"));
+
+var logger = loggerConfiguration.CreateLogger();
+builder.Logging.AddSerilog(logger);
+
+*/
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

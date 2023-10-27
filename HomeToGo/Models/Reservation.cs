@@ -1,3 +1,7 @@
+using System.ComponentModel.DataAnnotations;
+using Microsoft.Build.Framework;
+using Microsoft.VisualBasic.CompilerServices;
+
 namespace HomeToGo.Models
 {
     public class Reservation
@@ -8,8 +12,16 @@ namespace HomeToGo.Models
         public virtual User User { get; set; } = default!; 
         public int ListingId { get; set; }
         public virtual Listing Listing { set; get; } = default!;
+        
+        [DataType(DataType.Date)]
+        [Display(Name = "Check-in Date")]
+        // [Required(ErroeMessage = "Check-In Date is required.")] (feil meldimg
         public DateTime CheckInDate { get; set; }  // Check-in date
+        
+        [DataType(DataType.Date)]
+        [Display(Name = "Check-out Date")]
         public DateTime CheckOutDate { get; set; } // Check-out date
+        
         public int TotalPrice { get; set; }
     }
 }
