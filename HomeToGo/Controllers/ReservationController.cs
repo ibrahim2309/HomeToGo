@@ -20,34 +20,66 @@ public class ReservationController : Controller
         _logger = logger;
     }
 
-    public async Task<IActionResult> Table()
+    private async Task CalculateTotalPrice(Reservation reservation)
     {
-        // Include the related Listing data for each reservation
-        List<Reservation> reservations = await _listingDbContext.Reservations
-            .Include(r => r.Listing)
-            .ToListAsync();
-        return View(reservations);
-    }
-    
-    
-
-    public static decimal CalculateTotalPrice(Listing listing, Reservation reservation)
-    {
-        if (listing == null || reservation == null)
+        if (reservation == null)
         {
-            throw new ArgumentNullException("Listing or Reservation cannot be null");
+            throw new ArgumentNullException(nameof(reservation), "Reservation cannot be null");
         }
 
+        if (reservation.ListingId == null)
+        {
+            throw new ArgumentException("Reservation must have a ListingId");
+        }
+
+        var listing = await _listingDbContext.Listings
+            .FindAsync(reservation.ListingId);
+
+        if (listing == null)
+        {
+            throw new ArgumentException("Invalid ListingId in Reservation");
+        }
+        
+
+
+        /*
         if (reservation.CheckOutDate <= reservation.CheckInDate)
         {
             throw new ArgumentException("CheckOutDate must be greater than CheckInDate");
         }
-
+*/
         TimeSpan stayDuration = reservation.CheckOutDate - reservation.CheckInDate;
-        decimal totalPrice = listing.Price * stayDuration.Days;
-
-        return totalPrice;
+        reservation.TotalPrice = listing.Price * stayDuration.Days;
     }
+
+    
+    private async Task<bool> IsDateRangeAvailable(int listingId, DateTime checkIn, DateTime checkOut)
+    {
+        return !await _listingDbContext.Reservations
+            .Where(r => r.ListingId == listingId)
+            .AnyAsync(r => checkIn < r.CheckOutDate && r.CheckInDate < checkOut);
+    }
+
+    
+    public async Task<IActionResult> Table()
+    {
+        List<Reservation> reservations = await _listingDbContext.Reservations
+            .Include(r => r.Listing)
+            .ToListAsync();
+
+        foreach (var reservation in reservations)
+        {
+            await CalculateTotalPrice(reservation);
+        }
+
+        return View(reservations);
+    }
+
+
+    
+    
+
+   
 
     
     [HttpGet]
@@ -73,6 +105,7 @@ public class ReservationController : Controller
                 Text = listing.Title  
             }).ToList(),
         };
+        
 
         return View(createReservationViewModel);
     }
@@ -92,9 +125,10 @@ public class ReservationController : Controller
 
                 if (user == null || listing == null)
                 {
-                    _logger.LogError("[ReservationController] Reservation list not found while executing _listingRepository.GetAll()");
+                    _logger.LogError("[ReservationController] Reservation list not found");
                     return NotFound("Reservation list not found");
                 }
+                
 
                 _listingDbContext.Reservations.Add(model.Reservation);
                 await _listingDbContext.SaveChangesAsync();
@@ -127,6 +161,41 @@ public class ReservationController : Controller
         }
     }
 
+    [HttpGet]
+    public async Task<IActionResult> DeleteReservation(int id)
+    {
+        var reservation = await _listingDbContext.Reservations
+            .Include(r => r.Listing)  // Include the related Listing data
+            .Include(r => r.User)     // Include the related User data if needed
+            .FirstOrDefaultAsync(r => r.ReservationId == id);
 
+        if (reservation == null)
+        {
+            _logger.LogError("[ReservationController] Reservation not found");
+            return NotFound("Reservation not found");
+        }
+
+        await CalculateTotalPrice(reservation); // Calculate TotalPrice before passing to the view
+
+        return View(reservation);
+    }
+
+
+
+    [HttpPost]
+    [Authorize]
+    public async Task<IActionResult> DeleteConfirmed(int id)
+    {
+        var reservation = await _listingDbContext.Reservations.FindAsync(id);
+        if (reservation == null)
+        {
+            _logger.LogError("[ReservationController] Reservation list not found");
+            return NotFound("Reservation list not found");
+        }
+
+        _listingDbContext.Reservations.Remove(reservation);
+        await _listingDbContext.SaveChangesAsync();
+        return RedirectToAction(nameof(Table));
+    }
 }
 

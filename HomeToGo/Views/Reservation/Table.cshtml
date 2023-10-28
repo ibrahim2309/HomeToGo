@@ -1,36 +1,33 @@
 @using HomeToGo.Controllers
 @model IEnumerable<Reservation>
 
-<h1>List of Orders</h1>
+<h1>List of Reservations</h1>
 
 @foreach (var reservation in Model)
 {
-    decimal totalPrice = 0;
-
-    if (reservation.Listing != null)
-    {
-        totalPrice = ReservationController.CalculateTotalPrice(reservation.Listing, reservation);
-    }
     <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 20px;">
         <div class="container">
-            <h5>Order @reservation.ReservationId </h5>
+            <h5>Reservation @reservation.ReservationId </h5>
             <div>
                 <table class='table table-striped' style='max-width: 1200px;'>
                     <tr class="table-header">
                         <th>Order Date</th>
-                        <th>User ID</th>
+                        <th>User Name</th>
+                        <th>Listing</th> <!-- Added this line -->
                         <th>Check In Date</th>
                         <th>Check Out Date</th>
                         <th>Totalprice</th>
-
+                        <th>Actions</th>
                     </tr>
                     <tr>
-                        <td>@reservation.ReservationDate</td>
-                        <td>@reservation.UserId</td>
-                        <td>@reservation.CheckInDate</td>
-                        <td>@reservation.CheckOutDate</td>
+                        <td>@reservation.ReservationDate.ToString("d")</td>
+                        <td>@reservation.User?.Name</td>
+                        <td>@reservation.Listing?.Title</td> <!-- Added this line -->
+                        <td>@reservation.CheckInDate.ToString("d")</td>
+                        <td>@reservation.CheckOutDate.ToString("d")</td>
+                        <td>@reservation.TotalPrice.ToString("0.00 NOK")</td>
                         <td>
-                            @totalPrice
+                            <a class="btn btn-danger" asp-controller="Reservation" asp-action="DeleteReservation" asp-route-id="@reservation.ReservationId">Delete</a>
                         </td>
                     </tr>
                 </table>

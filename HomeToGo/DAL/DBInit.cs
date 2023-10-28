@@ -106,7 +106,15 @@ public static class DBInit
                     Email = "hei@live.com",
                     Number = "21231321",
                     Address = "Finnes ikke vei 3",
-                }
+                },
+                new User
+                {
+                    UserId = 2,
+                    Name = "Franklin Saint",
+                    Email = "Snowfall@live.com",
+                    Number = "991",
+                    Address = "Compton street 53",
+                },
 
             };
             context.AddRange(users);

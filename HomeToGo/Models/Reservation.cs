@@ -7,7 +7,7 @@ namespace HomeToGo.Models
     public class Reservation
     {
         public int ReservationId { get; set; }
-        public DateTime ReservationDate { get; set; } = DateTime.Now;
+        public DateTime ReservationDate { get; set; } = DateTime.Today; 
         public int UserId { get; set; } 
         public virtual User User { get; set; } = default!; 
         public int ListingId { get; set; }
@@ -22,6 +22,6 @@ namespace HomeToGo.Models
         [Display(Name = "Check-out Date")]
         public DateTime CheckOutDate { get; set; } // Check-out date
         
-        public int TotalPrice { get; set; }
+        public decimal TotalPrice { get; set; }
     }
 }
