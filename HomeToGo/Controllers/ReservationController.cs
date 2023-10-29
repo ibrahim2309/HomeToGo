@@ -53,12 +53,7 @@ public class ReservationController : Controller
     }
 
     
-    private async Task<bool> IsDateRangeAvailable(int listingId, DateTime checkIn, DateTime checkOut)
-    {
-        return !await _listingDbContext.Reservations
-            .Where(r => r.ListingId == listingId)
-            .AnyAsync(r => checkIn < r.CheckOutDate && r.CheckInDate < checkOut);
-    }
+    
 
     
     public async Task<IActionResult> Table()
