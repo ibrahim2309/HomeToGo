@@ -13,9 +13,9 @@ namespace HomeToGo.Models
         public int ListingId { get; set; }
         public virtual Listing Listing { set; get; } = default!;
         
+        
         [DataType(DataType.Date)]
         [Display(Name = "Check-in Date")]
-        // [Required(ErroeMessage = "Check-In Date is required.")] (feil meldimg
         public DateTime CheckInDate { get; set; }  // Check-in date
         
         [DataType(DataType.Date)]

@@ -1,11 +1,20 @@
 @model HomeToGo.ViewModels.ListingListViewModel
 
-<h1>List of Listings Items (@Model.CurrentViewName View)</h1>
-    <a href="/Listing/Table">Table View</a>
+<h1 class="mb-4">Our Listings Items</h1>
+<a href="/Listing/Table" class="btn btn-secondary mb-3">Table View</a>
 
-    <div class="row row-cols-1 row-cols-md-3 g-4">
+<div class="row row-cols-1 row-cols-md-3 g-4">
     @foreach (var listing in Model.Listings)
-{
-    <partial name="_ListingCard" model="listing"/>
-}
+    {
+        <partial name="_ListingCard" model="listing"/>
+    }
+    
+    
+     <div class="col">
+            <div class="card h-100 text-center">
+                <div class="card-body d-flex align-items-center justify-content-center">
+                    <a href="/Listing/Create" class="btn btn-primary">Create New Listing</a>
+                </div>
+            </div>
+        </div>
 </div>

@@ -28,7 +28,12 @@
           <span asp-validation-for="Reservation.CheckOutDate" class="text-danger"></span>
       </div>
    
-      <button type="submit" class="btn btn-primary">Create</button>
-      <span asp-validation-summary="All" class="text-danger"></span>
+     @if (ViewData.ModelState.ContainsKey("Occupied") && ViewData.ModelState["Occupied"].Errors.Count > 0)
+        {
+            <div class="alert alert-danger">
+                @ViewData.ModelState["Occupied"].Errors.First().ErrorMessage
+            </div>
+        }
+    <button type="submit" class="btn btn-primary">Create</button>
       <a asp-controller="Reservation" asp-action="Table" class="btn btn-secondary">Back to Reservations</a>
    </form>

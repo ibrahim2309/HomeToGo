@@ -40,17 +40,20 @@ public class ReservationController : Controller
             throw new ArgumentException("Invalid ListingId in Reservation");
         }
         
-
-
-        /*
-        if (reservation.CheckOutDate <= reservation.CheckInDate)
-        {
-            throw new ArgumentException("CheckOutDate must be greater than CheckInDate");
-        }
-*/
         TimeSpan stayDuration = reservation.CheckOutDate - reservation.CheckInDate;
         reservation.TotalPrice = listing.Price * stayDuration.Days;
     }
+    
+    private async Task<bool> IsReservationOccupied(Reservation newReservation)
+    {
+        return await _listingDbContext.Reservations
+            .AnyAsync(r => r.ListingId == newReservation.ListingId &&
+                           r.ReservationId != newReservation.ReservationId &&   // to exclude the reservation itself if it's an update
+                           ((newReservation.CheckInDate >= r.CheckInDate && newReservation.CheckInDate < r.CheckOutDate) ||
+                            (newReservation.CheckOutDate > r.CheckInDate && newReservation.CheckOutDate <= r.CheckOutDate) ||
+                            (newReservation.CheckInDate <= r.CheckInDate && newReservation.CheckOutDate >= r.CheckOutDate)));
+    }
+
 
     
     
@@ -112,23 +115,29 @@ public class ReservationController : Controller
     {
         try
         {
-            
             if (!ModelState.IsValid)
             {
-                var user = await _listingDbContext.Users.FindAsync(model.Reservation.UserId);
-                var listing = await _listingDbContext.Listings.FindAsync(model.Reservation.ListingId);
-
-                if (user == null || listing == null)
+                if (await IsReservationOccupied(model.Reservation))
                 {
-                    _logger.LogError("[ReservationController] Reservation list not found");
-                    return NotFound("Reservation list not found");
+                    ModelState.AddModelError(string.Empty, "The reservation is occupied for the selected dates.");
+                    _logger.LogError("[ReservationController] The reservation is occupied for the selected dates");
                 }
-                
+                else
+                {
+                    var user = await _listingDbContext.Users.FindAsync(model.Reservation.UserId);
+                    var listing = await _listingDbContext.Listings.FindAsync(model.Reservation.ListingId);
 
-                _listingDbContext.Reservations.Add(model.Reservation);
-                await _listingDbContext.SaveChangesAsync();
+                    if (user == null || listing == null)
+                    {
+                        _logger.LogError("[ReservationController] User or Listing not found");
+                        return NotFound("User or Listing not found");
+                    }
 
-                return RedirectToAction(nameof(Table));
+                    _listingDbContext.Reservations.Add(model.Reservation);
+                    await _listingDbContext.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Table));
+                }
             }
 
             var users = await _listingDbContext.Users.ToListAsync();
@@ -145,16 +154,16 @@ public class ReservationController : Controller
                 Value = listing.ListingId.ToString(),
                 Text = listing.Title
             }).ToList();
-            
-            
-            return View(model); 
+
+            return View(model);
         }
         catch (Exception e)
         {
-            _logger.LogError("[ReservationController] Reservation creation failed for listing {@reservation}, error message: ", e.Message);
-            return null;
+            _logger.LogError("[ReservationController] Reservation creation failed: {errorMessage}", e.Message);
+            return View("Error");
         }
     }
+
 
     [HttpGet]
     public async Task<IActionResult> DeleteReservation(int id)

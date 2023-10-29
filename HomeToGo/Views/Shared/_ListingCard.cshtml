@@ -1,20 +1,18 @@
 @model Listing
 
 <div class="col">
-        <div>
-        <img src="@Model.ImageUrl" class="card-img-top" alt="@Model.Title">
-        <div>
-        <div class="d-flex justify-content-between mt-2">
-        <h5 class="text-start">
-            <a asp-controller="Listing" 
-               asp-action="Details"
-               asp-route-id="@Model.ListingId">@Model.Title</a>
-        </h5>
-        <h5 class="text-nowrap">
-        @Model.Price.ToString("0.00 Nok")
-        </h5>
+    <a href="/Listing/Details/@Model.ListingId" class="card-link">
+        <div class="card h-100">
+            <img src="@Model.ImageUrl" class="card-img-top" alt="@Model.Title">
+            <div class="card-body">
+                <h5 class="card-title">@Model.Title</h5>
+                <p class="card-text">@Model.Description</p>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-between">
+                    <h6>@Model.Price.ToString("0.00 Nok")</h6>
+                </div>
+            </div>
         </div>
-        </div>
-        </div>
-        </div>
-
+    </a>
+</div>

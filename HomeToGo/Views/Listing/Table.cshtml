@@ -1,7 +1,6 @@
 @model HomeToGo.ViewModels.ListingListViewModel
 
-<h1>List of Listing Properties (@Model.CurrentViewName View)</h1>
-    <a href="/Listing/Grid">Grid View</a>
+<h1 class="mb-4">List of Listing Properties (@Model.CurrentViewName View)</h1>
+<a href="/Listing/Grid" class="btn btn-secondary mb-3">Grid View</a>
 
 <partial name="_ListingTable" model="Model.Listings"/>
-
