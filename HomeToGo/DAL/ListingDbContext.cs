@@ -1,6 +1,5 @@
 using System;
 using HomeToGo.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -16,7 +15,7 @@ public class ListingDbContext : IdentityDbContext
 
     public DbSet<Listing> Listings { get; set; }
     public DbSet<Reservation> Reservations { get; set; }
-    public DbSet<IdentityUser> Users { get; set; }
+    public DbSet<User> Users { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.UseLazyLoadingProxies();

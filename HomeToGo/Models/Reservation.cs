@@ -1,25 +1,15 @@
-using System;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.Build.Framework;
+using Microsoft.VisualBasic.CompilerServices;
 
 namespace HomeToGo.Models
 {
     public class Reservation
     {
         public int ReservationId { get; set; }
-<<<<<<< Updated upstream
         public DateTime ReservationDate { get; set; } = DateTime.Today; 
         public int UserId { get; set; } 
         public virtual User User { get; set; } = default!; 
-=======
-        public DateTime ReservationDate { get; set; } = DateTime.Now;
-
-        // Reference to the AspNetUser
-        public string UserId { get; set; }
-        public virtual IdentityUser User { get; set; }
-        
-        [Display(Name = "Listing")]
->>>>>>> Stashed changes
         public int ListingId { get; set; }
         public virtual Listing Listing { set; get; } = default!;
         

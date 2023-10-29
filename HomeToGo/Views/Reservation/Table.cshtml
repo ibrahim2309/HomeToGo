@@ -12,31 +12,20 @@
                 <table class='table table-striped' style='max-width: 1200px;'>
                     <tr class="table-header">
                         <th>Order Date</th>
-<<<<<<< Updated upstream
                         <th>User Name</th>
                         <th>Listing</th> <!-- Added this line -->
-=======
-                        <th>User</th>
->>>>>>> Stashed changes
                         <th>Check In Date</th>
                         <th>Check Out Date</th>
                         <th>Totalprice</th>
                         <th>Delete</th>
                     </tr>
                     <tr>
-<<<<<<< Updated upstream
                         <td>@reservation.ReservationDate.ToString("d")</td>
                         <td>@reservation.User?.Name</td>
                         <td>@reservation.Listing?.Title</td> <!-- Added this line -->
                         <td>@reservation.CheckInDate.ToString("d")</td>
                         <td>@reservation.CheckOutDate.ToString("d")</td>
                         <td>@reservation.TotalPrice.ToString("0.00 NOK")</td>
-=======
-                        <td>@reservation.ReservationDate</td>
-                        <td>@(reservation.User?.Email ?? "N/A")</td>
-                        <td>@reservation.CheckInDate</td>
-                        <td>@reservation.CheckOutDate</td>
->>>>>>> Stashed changes
                         <td>
                             <a class="btn btn-danger" asp-controller="Reservation" asp-action="DeleteReservation" asp-route-id="@reservation.ReservationId">Delete</a>
                         </td>
