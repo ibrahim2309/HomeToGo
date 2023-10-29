@@ -12,7 +12,7 @@
                 <table class='table table-striped' style='max-width: 1200px;'>
                     <tr class="table-header">
                         <th>Order Date</th>
-                        <th>User Name</th>
+                        <th>User</th>
                         <th>Listing</th> <!-- Added this line -->
                         <th>Check In Date</th>
                         <th>Check Out Date</th>
@@ -21,7 +21,7 @@
                     </tr>
                     <tr>
                         <td>@reservation.ReservationDate.ToString("d")</td>
-                        <td>@reservation.User?.Name</td>
+                        <td>@(reservation.User?.UserName)</td>
                         <td>@reservation.Listing?.Title</td> <!-- Added this line -->
                         <td>@reservation.CheckInDate.ToString("d")</td>
                         <td>@reservation.CheckOutDate.ToString("d")</td>

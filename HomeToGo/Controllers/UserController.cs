@@ -1,22 +1,17 @@
-using HomeToGo.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using HomeToGo.DAL;
-
-namespace HomeToGo.Controllers;
-
+using System.Threading.Tasks;
 public class UserController : Controller
 {
-    private readonly ListingDbContext _listingDbContext;
-
-    public UserController(ListingDbContext listingDbContext)
+    private readonly UserManager<IdentityUser> _userManager;
+    public UserController(UserManager<IdentityUser> userManager)
     {
-        _listingDbContext = listingDbContext;
+        _userManager = userManager;
     }
-
-    public async Task<IActionResult> Table()
+    public async Task<IActionResult> Users()
     {
-        List<User> users = await _listingDbContext.Users.ToListAsync();
-        return View(users);
+        var users = await _userManager.Users.ToListAsync();
+        return View("~/Views/Shared/_UserTable.cshtml", users);
     }
 }

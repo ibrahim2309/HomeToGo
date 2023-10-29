@@ -10,6 +10,7 @@
                 <th>Price</th>
                 <th>Description</th>
                 <th>Image</th>
+                <th>Host</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -24,6 +25,7 @@
                     <td>@listing.Address</td>
                     <td>@listing.Price.ToString(("0.00 Nok"))</td>
                     <td>@listing.Description</td>
+                    <td>@(listing.User?.Email ?? "N/A")</td>
                     <td>
                         <img src="@listing.ImageUrl" alt="Listing Image" style="max-width: 80px; max-height: 80px;"/>
                     </td>

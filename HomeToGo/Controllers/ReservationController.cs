@@ -5,19 +5,24 @@ using HomeToGo.DAL;
 using HomeToGo.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 
 namespace HomeToGo.Controllers;
 
 public class ReservationController : Controller
 {
-    private readonly ILogger<ReservationController> _logger; 
+    private readonly ILogger<ReservationController> _logger;
     private readonly ListingDbContext _listingDbContext;
+    private readonly UserManager<IdentityUser> _userManager;
 
-    public ReservationController(ListingDbContext listingDbContext, ILogger<ReservationController> logger)
+
+    public ReservationController(ListingDbContext listingDbContext, ILogger<ReservationController> logger,
+        UserManager<IdentityUser> userManager)
     {
         _listingDbContext = listingDbContext;
         _logger = logger;
+        _userManager = userManager;
     }
 
     private async Task CalculateTotalPrice(Reservation reservation)
@@ -39,26 +44,26 @@ public class ReservationController : Controller
         {
             throw new ArgumentException("Invalid ListingId in Reservation");
         }
-        
+
         TimeSpan stayDuration = reservation.CheckOutDate - reservation.CheckInDate;
         reservation.TotalPrice = listing.Price * stayDuration.Days;
     }
-    
+
     private async Task<bool> IsReservationOccupied(Reservation newReservation)
     {
         return await _listingDbContext.Reservations
             .AnyAsync(r => r.ListingId == newReservation.ListingId &&
-                           r.ReservationId != newReservation.ReservationId &&   // to exclude the reservation itself if it's an update
-                           ((newReservation.CheckInDate >= r.CheckInDate && newReservation.CheckInDate < r.CheckOutDate) ||
-                            (newReservation.CheckOutDate > r.CheckInDate && newReservation.CheckOutDate <= r.CheckOutDate) ||
-                            (newReservation.CheckInDate <= r.CheckInDate && newReservation.CheckOutDate >= r.CheckOutDate)));
+                           r.ReservationId !=
+                           newReservation.ReservationId && // to exclude the reservation itself if it's an update
+                           ((newReservation.CheckInDate >= r.CheckInDate &&
+                             newReservation.CheckInDate < r.CheckOutDate) ||
+                            (newReservation.CheckOutDate > r.CheckInDate &&
+                             newReservation.CheckOutDate <= r.CheckOutDate) ||
+                            (newReservation.CheckInDate <= r.CheckInDate &&
+                             newReservation.CheckOutDate >= r.CheckOutDate)));
     }
 
 
-    
-    
-
-    
     public async Task<IActionResult> Table()
     {
         List<Reservation> reservations = await _listingDbContext.Reservations
@@ -74,16 +79,9 @@ public class ReservationController : Controller
     }
 
 
-    
-    
-
-   
-
-    
     [HttpGet]
     public async Task<IActionResult> CreateReservation()
     {
-        
         var users = await _listingDbContext.Users.ToListAsync();
         var listings = await _listingDbContext.Listings.ToListAsync();
 
@@ -93,23 +91,23 @@ public class ReservationController : Controller
 
             UserSelectList = users.Select(user => new SelectListItem
             {
-                Value = user.UserId.ToString(),
-                Text = user.Name
+                Value = user.Id.ToString(),
+                Text = user.UserName
             }).ToList(),
 
             ListingSelectList = listings.Select(listing => new SelectListItem
             {
                 Value = listing.ListingId.ToString(),
-                Text = listing.Title  
+                Text = listing.Title
             }).ToList(),
         };
-        
+
 
         return View(createReservationViewModel);
     }
 
-  
-    
+
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> CreateReservation(CreateReservationViewModel model)
     {
@@ -117,6 +115,14 @@ public class ReservationController : Controller
         {
             if (!ModelState.IsValid)
             {
+                var loggedInUser = await _userManager.GetUserAsync(User);
+                if (loggedInUser == null)
+                {
+                    return Unauthorized("No logged-in user found.");
+                }
+
+                model.Reservation.UserId = loggedInUser.Id;
+
                 if (await IsReservationOccupied(model.Reservation))
                 {
                     ModelState.AddModelError(string.Empty, "The reservation is occupied for the selected dates.");
@@ -138,29 +144,34 @@ public class ReservationController : Controller
 
                     return RedirectToAction(nameof(Table));
                 }
+
+                var users = await _listingDbContext.Users.ToListAsync();
+                var listings = await _listingDbContext.Listings.ToListAsync();
+
+                model.UserSelectList = users.Select(user => new SelectListItem
+                {
+                    Value = user.Id.ToString(),
+                    Text = user.UserName
+                }).ToList();
+
+                model.ListingSelectList = listings.Select(listing => new SelectListItem
+                {
+                    Value = listing.ListingId.ToString(),
+                    Text = listing.Title
+                }).ToList();
+
+                return View(model);
             }
-
-            var users = await _listingDbContext.Users.ToListAsync();
-            var listings = await _listingDbContext.Listings.ToListAsync();
-
-            model.UserSelectList = users.Select(user => new SelectListItem
+            else
             {
-                Value = user.UserId.ToString(),
-                Text = user.Name
-            }).ToList();
-
-            model.ListingSelectList = listings.Select(listing => new SelectListItem
-            {
-                Value = listing.ListingId.ToString(),
-                Text = listing.Title
-            }).ToList();
-
-            return View(model);
+                return BadRequest("Model state is not valid.");
+            }
         }
         catch (Exception e)
         {
-            _logger.LogError("[ReservationController] Reservation creation failed: {errorMessage}", e.Message);
-            return View("Error");
+            _logger.LogError(
+                $"[ReservationController] Reservation creation failed for listing {model.Reservation.ListingId}, error message: {e.Message}");
+            return BadRequest("Error creating reservation.");
         }
     }
 
@@ -169,8 +180,8 @@ public class ReservationController : Controller
     public async Task<IActionResult> DeleteReservation(int id)
     {
         var reservation = await _listingDbContext.Reservations
-            .Include(r => r.Listing)  // Include the related Listing data
-            .Include(r => r.User)     // Include the related User data if needed
+            .Include(r => r.Listing) // Include the related Listing data
+            .Include(r => r.User) // Include the related User data if needed
             .FirstOrDefaultAsync(r => r.ReservationId == id);
 
         if (reservation == null)
@@ -183,7 +194,6 @@ public class ReservationController : Controller
 
         return View(reservation);
     }
-
 
 
     [HttpPost]
@@ -202,4 +212,3 @@ public class ReservationController : Controller
         return RedirectToAction(nameof(Table));
     }
 }
-
