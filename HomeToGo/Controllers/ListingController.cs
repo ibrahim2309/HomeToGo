@@ -4,6 +4,16 @@ using Microsoft.AspNetCore.Mvc;
 using HomeToGo.DAL;
 using Microsoft.AspNetCore.Authorization;
 using Serilog;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+
 
 
 namespace HomeToGo.Controllers;
@@ -13,14 +23,17 @@ public class ListingController : Controller
     private readonly IListingRepository _listingRepository;
     private readonly ILogger<ListingController> _logger;
     
-    
+   private readonly UserManager<IdentityUser> _userManager;
 
-    public ListingController(IListingRepository listingRepository, ILogger<ListingController> logger)
-    {
-        
-        _listingRepository = listingRepository;
-        _logger = logger;
-    }
+public ListingController(IListingRepository listingRepository, 
+                         ILogger<ListingController> logger, 
+                         UserManager<IdentityUser> userManager)
+{
+    _listingRepository = listingRepository;
+    _logger = logger;
+    _userManager = userManager;
+}
+
     
     public async Task<IActionResult> Table()
     {
@@ -60,29 +73,32 @@ public class ListingController : Controller
     }
 
     [HttpGet]
-    //[Authorize]
+    [Authorize]
     public IActionResult Create()
     {
         return View();
     }
-
     [HttpPost]
-    //[Authorize]
+    [Authorize]
     public async Task<IActionResult> Create(Listing listing)
     {
         if (ModelState.IsValid)
         {
+            // Assign the UserId from the current logged-in user
+            listing.UserId = _userManager.GetUserId(User); 
+
             bool returnOk = await _listingRepository.Create(listing);
             if (returnOk)   
                 return RedirectToAction(nameof(Table));
         }
         _logger.LogWarning("[ListingController] Listing creation failed {@listing}", listing);
         return View(listing);
-
     }
 
+
+
     [HttpGet]
-   // [Authorize]
+    [Authorize]
     public async Task<IActionResult> Update(int id)
    {
        var listing = await _listingRepository.GetListingById(id);
@@ -96,7 +112,7 @@ public class ListingController : Controller
     }
 
     [HttpPost]
-  //  [Authorize]
+    [Authorize]
     public async Task<IActionResult> Update(Listing listing)
     {
         if (ModelState.IsValid)
@@ -110,7 +126,7 @@ public class ListingController : Controller
     }
 
     [HttpGet]
-   // [Authorize]
+    [Authorize]
     public async Task<IActionResult> Delete(int id)
    {
        var listing = await _listingRepository.GetListingById(id);
@@ -125,7 +141,7 @@ public class ListingController : Controller
     }
 
     [HttpPost]
-    //[Authorize]
+    [Authorize]
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         var listing = await _listingRepository.GetListingById(id);

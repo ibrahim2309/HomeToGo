@@ -1,27 +1,27 @@
-@model IEnumerable<User> 
+@model IEnumerable<Microsoft.AspNetCore.Identity.IdentityUser>
 
 <div class="container">
     <table class="table table-striped">
+        <thead>
         <tr>
             <th>Id</th>
-            <th>Name</th>
-            <th>Adress</th>
-            <th>Reservations</th>
+            <th>User Name</th>
+            <th>Phone Number</th>
+            <th>Email Confirmed</th>
+            <th>Two Factor Enabled</th>
         </tr>
+        </thead>
+        <tbody>
         @foreach (var user in Model)
         {
             <tr>
-                <td>@user.UserId</td> 
-                <td>@user.Name</td>
-                <td>@user.Address</td>
-                <td>
-                    @if (@user.Reservations != null)
-                    {
-                        <p>@string.Join(", ", @user.Reservations.Select(reservation => $"Reservation{reservation.ReservationId}"))</p>
-                    }
-                </td>
-                <td></td>
+                <td>@user.Id</td> 
+                <td>@user.UserName</td>
+                <td>@user.PhoneNumber</td>
+                <td>@(user.EmailConfirmed ? "Yes" : "No")</td>
+                <td>@(user.TwoFactorEnabled ? "Yes" : "No")</td>
             </tr>
         }
+        </tbody>
     </table>
 </div>

@@ -4,22 +4,23 @@ using Microsoft.EntityFrameworkCore;
 using HomeToGo.DAL;
 using HomeToGo.ViewModels;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 
-namespace HomeToGo.Controllers;
-
-public class ReservationController : Controller
+namespace HomeToGo.Controllers
 {
-    private readonly ILogger<ReservationController> _logger; 
-    private readonly ListingDbContext _listingDbContext;
-
-    public ReservationController(ListingDbContext listingDbContext, ILogger<ReservationController> logger)
+    public class ReservationController : Controller
     {
-        _listingDbContext = listingDbContext;
-        _logger = logger;
-    }
+        private readonly ILogger<ReservationController> _logger;
+        private readonly ListingDbContext _listingDbContext;
 
+<<<<<<< Updated upstream
     private async Task CalculateTotalPrice(Reservation reservation)
     {
         if (reservation == null)
@@ -88,11 +89,30 @@ public class ReservationController : Controller
         var listings = await _listingDbContext.Listings.ToListAsync();
 
         var createReservationViewModel = new CreateReservationViewModel
-        {
-            Reservation = new Reservation(),
+=======
+        private readonly UserManager<IdentityUser> _userManager;
 
-            UserSelectList = users.Select(user => new SelectListItem
+        public ReservationController(ListingDbContext listingDbContext, ILogger<ReservationController> logger, UserManager<IdentityUser> userManager)
+        {
+            _listingDbContext = listingDbContext;
+            _logger = logger;
+            _userManager = userManager;
+        }
+
+        public async Task<IActionResult> Table()
+        {
+            List<Reservation> reservations = await _listingDbContext.Reservations
+                .Include(r => r.Listing)
+                .ToListAsync();
+            return View(reservations);
+        }
+
+        public static decimal CalculateTotalPrice(Listing listing, Reservation reservation)
+>>>>>>> Stashed changes
+        {
+            if (listing == null || reservation == null)
             {
+<<<<<<< Updated upstream
                 Value = user.UserId.ToString(),
                 Text = user.Name
             }).ToList(),
@@ -138,17 +158,32 @@ public class ReservationController : Controller
 
                     return RedirectToAction(nameof(Table));
                 }
+=======
+                throw new ArgumentNullException("Listing or Reservation cannot be null");
+>>>>>>> Stashed changes
             }
 
-            var users = await _listingDbContext.Users.ToListAsync();
+            if (reservation.CheckOutDate <= reservation.CheckInDate)
+            {
+                throw new ArgumentException("CheckOutDate must be greater than CheckInDate");
+            }
+
+            TimeSpan stayDuration = reservation.CheckOutDate - reservation.CheckInDate;
+            decimal totalPrice = listing.Price * stayDuration.Days;
+
+            return totalPrice;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> CreateReservation()
+        {
             var listings = await _listingDbContext.Listings.ToListAsync();
 
-            model.UserSelectList = users.Select(user => new SelectListItem
+            var createReservationViewModel = new CreateReservationViewModel
             {
-                Value = user.UserId.ToString(),
-                Text = user.Name
-            }).ToList();
+                Reservation = new Reservation(),
 
+<<<<<<< Updated upstream
             model.ListingSelectList = listings.Select(listing => new SelectListItem
             {
                 Value = listing.ListingId.ToString(),
@@ -156,13 +191,76 @@ public class ReservationController : Controller
             }).ToList();
 
             return View(model);
+=======
+                ListingSelectList = listings.Select(listing => new SelectListItem
+                {
+                    Value = listing.ListingId.ToString(),
+                    Text = listing.Title
+                }).ToList(),
+            };
+
+            return View(createReservationViewModel);
+>>>>>>> Stashed changes
         }
-        catch (Exception e)
+
+        [HttpPost]
+        [Authorize]  
+        public async Task<IActionResult> CreateReservation(CreateReservationViewModel model)
         {
+<<<<<<< Updated upstream
             _logger.LogError("[ReservationController] Reservation creation failed: {errorMessage}", e.Message);
             return View("Error");
+=======
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    var loggedInUser = await _userManager.GetUserAsync(User);
+                    if (loggedInUser == null)
+                    {
+                        return Unauthorized("No logged-in user found.");
+                    }
+    
+                    model.Reservation.UserId = loggedInUser.Id;
+
+            
+                    // Calculate the total price
+                    var listing = await _listingDbContext.Listings.FindAsync(model.Reservation.ListingId);
+                    if (listing == null)
+                    {
+                        _logger.LogError("[ReservationController] Reservation list not found while executing _listingRepository.GetAll()");
+                        return NotFound("Reservation list not found");
+                    }
+            
+                    model.Reservation.TotalPrice = (int)CalculateTotalPrice(listing, model.Reservation);
+
+                    
+                    _listingDbContext.Reservations.Add(model.Reservation);
+                    await _listingDbContext.SaveChangesAsync();
+
+                    return RedirectToAction(nameof(Table));
+                }
+
+                
+                var listings = await _listingDbContext.Listings.ToListAsync();
+                model.ListingSelectList = listings.Select(listing => new SelectListItem
+                {
+                    Value = listing.ListingId.ToString(),
+                    Text = listing.Title
+                }).ToList();
+
+                return View(model);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"[ReservationController] Reservation creation failed for listing {model.Reservation.ListingId}, error message: {e.Message}");
+                return BadRequest("Error creating reservation.");
+            }
+>>>>>>> Stashed changes
         }
+
     }
+<<<<<<< Updated upstream
 
 
     [HttpGet]
@@ -201,5 +299,6 @@ public class ReservationController : Controller
         await _listingDbContext.SaveChangesAsync();
         return RedirectToAction(nameof(Table));
     }
+=======
+>>>>>>> Stashed changes
 }
-
