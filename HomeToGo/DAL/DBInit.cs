@@ -16,7 +16,7 @@ public static class DBInit
     {
         using var serviceScope = app.ApplicationServices.CreateScope();
         ListingDbContext context = serviceScope.ServiceProvider.GetRequiredService<ListingDbContext>();
-        //context.Database.EnsureDeleted();
+        context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
         
         var oleUser = new IdentityUser { UserName = "Ole Hansen", Email = "ole.hansen@email.no", PasswordHash = "HashedPassword1", EmailConfirmed = true }; 
@@ -49,71 +49,53 @@ public static class DBInit
                     Title = "Tjuvholem, Penthouse",
                     Address = "Osloveien 36",
                     Price = 2500,
-                    Description = "Fin topp leilighet i midten av Oslo, Med utsikt over hele byen",
+                    Description = "This apartment at Tjuvholmen impresses with its modern style and exclusive location, right by Oslo’s waterfront",
                     UserId = oleUser.Id,
                     ImageUrl = "/Images/Ap1.jpg"
                 },
-                new Listing
-                {
-                    ListingId = 2,
-                    Title = "Montebello, Villa",
-                    Address = "Montebelloveien 7",
-                    Price = 150,
-                    Description = "Stor villa i vest-kanten av Oslo, inkluderer en porche med på leie",
-                    UserId = kariUser.Id,
-                    ImageUrl = "/Images/Ap2.jpg"
-                },
+             
    
                 new Listing
                 {
-                    ListingId = 3,
-                    Title = "Pilistredet student hus",
+                    ListingId = 2,
+                    Title = "Modern Apartment in Pilestredet",
                     Address = "Pilistredet 32",
                     Price = 500,
-                    Description = "Student leilighet rett ved OsloMet",
+                    Description = "This modern apartment in Pilestredet is perfect for those who wish to live centrally in Oslo.\"",
                     UserId = oleUser.Id,
                     ImageUrl = "/Images/Ap3.jpg"
                 },
                 new Listing
                 {
-                    ListingId = 4,
-                    Title = "Lido beach, House",
-                    Address = "Lido 1",
+                    ListingId = 3,
+                    Title = "Montebello, Villa",
+                    Address = "Montebello gate 1",
                     Price = 4500,
-                    Description = "Stor kyst hus i Lido Beach Mogadishu",
+                    Description = "This spacious villa in Montebello combines luxury and comfort..",
                     UserId = oleUser.Id,
                     ImageUrl = "/Images/Ap4.jpg"
                 },
                 new Listing
                 {
-                    ListingId = 5,
-                    Title = "Ullevål, Hageby",
-                    Address = "Hovster 43",
-                    Price = 10,
-                    Description = "Enebolig i Ullevål Hageby i Oslo er kjent for sin idylliske og grønne atmosfære",
+                    ListingId = 4,
+                    Title = "Frogener, Hageby",
+                    Address = "Frogner Veien 43",
+                    Price = 300,
+                    Description = "Single-family homes in Frogner Hageby in Oslo are renowned for their idyllic and lush atmosphere.",
                     UserId = oleUser.Id,
                     ImageUrl = "/Images/Ap5.jpg"
                 },
                 new Listing
                 {
-                    ListingId = 6,
-                    Title = "Bjerke, leiglighet",
-                    Address = "Bjerkeveien 73",
+                    ListingId = 5,
+                    Title = "Zanzibar, Beach house",
+                    Address = "Zanzi 73",
                     Price = 960,
-                    Description = "Fin leiglighet i midten av Bjerke",
+                    Description = "This beach house in Zanzibar offers stunning ocean views, perfect for a relaxing holiday..",
                     UserId = larsUser.Id,
                     ImageUrl = "/Images/Ap6.jpg"
                 },
-                new Listing
-                {
-                    ListingId = 7,
-                    Title = "South of france, Villa",
-                    Address = "Vive la Nice 7",
-                    Price = 3500,
-                    Description = "Stor villa nice, inkluderer maid som tar vare på deg",
-                    UserId = kariUser.Id,
-                    ImageUrl = "/Images/Ap7.jpg"
-                },
+            
    
    
             };
@@ -139,9 +121,9 @@ public static class DBInit
                 {
                     ReservationId = 2,
                     UserId = kariUser.Id,
-                    ListingId = 1, 
+                    ListingId = 3, 
                     CheckInDate = DateTime.Now.AddDays(1),
-                    CheckOutDate = DateTime.Now.AddDays(7),
+                    CheckOutDate = DateTime.Now.AddDays(3),
                     TotalPrice = 700 
                 },
                 new Reservation()

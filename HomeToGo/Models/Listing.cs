@@ -19,7 +19,7 @@ public class Listing
     [Range(0.01, double.MaxValue, ErrorMessage = "The price must be greater than 0.")]
     public decimal Price { get; set; }
     
-    [StringLength(50)]
+    [StringLength(200)]
     public string? Description { get; set; }
     
     public string? ImageUrl { get; set; }

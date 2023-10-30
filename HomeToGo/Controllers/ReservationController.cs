@@ -113,6 +113,9 @@ public async Task<IActionResult> CreateReservation(CreateReservationViewModel mo
 {
     try
     {
+        ModelState.Remove("Reservation.UserId");
+        ModelState.Remove("Reservation.User");
+        
         if (!ModelState.IsValid)
         {
             var loggedInUser = await _userManager.GetUserAsync(User);
