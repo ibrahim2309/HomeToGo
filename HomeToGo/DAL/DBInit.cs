@@ -87,10 +87,10 @@ public static class DBInit
                 new Listing
                 {
                     ListingId = 5,
-                    Title = "Hovseter, Krigere",
+                    Title = "Ullevål, Hageby",
                     Address = "Hovster 43",
                     Price = 10,
-                    Description = "Trap Bando ved Hovseter T-bane",
+                    Description = "Enebolig i Ullevål Hageby i Oslo er kjent for sin idylliske og grønne atmosfære",
                     UserId = oleUser.Id,
                     ImageUrl = "/Images/Ap5.jpg"
                 },

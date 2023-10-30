@@ -108,72 +108,75 @@ public class ReservationController : Controller
 
 
     [Authorize]
-    [HttpPost]
-    public async Task<IActionResult> CreateReservation(CreateReservationViewModel model)
+[HttpPost]
+public async Task<IActionResult> CreateReservation(CreateReservationViewModel model)
+{
+    try
     {
-        try
+        if (!ModelState.IsValid)
         {
-            if (!ModelState.IsValid)
+            var loggedInUser = await _userManager.GetUserAsync(User);
+            if (loggedInUser == null)
             {
-                var loggedInUser = await _userManager.GetUserAsync(User);
-                if (loggedInUser == null)
-                {
-                    return Unauthorized("No logged-in user found.");
-                }
+                return Unauthorized("No logged-in user found.");
+            }
 
-                model.Reservation.UserId = loggedInUser.Id;
+            model.Reservation.UserId = loggedInUser.Id;
 
-                if (await IsReservationOccupied(model.Reservation))
-                {
-                    ModelState.AddModelError(string.Empty, "The reservation is occupied for the selected dates.");
-                    _logger.LogError("[ReservationController] The reservation is occupied for the selected dates");
-                }
-                else
-                {
-                    var user = await _listingDbContext.Users.FindAsync(model.Reservation.UserId);
-                    var listing = await _listingDbContext.Listings.FindAsync(model.Reservation.ListingId);
-
-                    if (user == null || listing == null)
-                    {
-                        _logger.LogError("[ReservationController] User or Listing not found");
-                        return NotFound("User or Listing not found");
-                    }
-
-                    _listingDbContext.Reservations.Add(model.Reservation);
-                    await _listingDbContext.SaveChangesAsync();
-
-                    return RedirectToAction(nameof(Table));
-                }
-
-                var users = await _listingDbContext.Users.ToListAsync();
-                var listings = await _listingDbContext.Listings.ToListAsync();
-
-                model.UserSelectList = users.Select(user => new SelectListItem
-                {
-                    Value = user.Id.ToString(),
-                    Text = user.UserName
-                }).ToList();
-
-                model.ListingSelectList = listings.Select(listing => new SelectListItem
-                {
-                    Value = listing.ListingId.ToString(),
-                    Text = listing.Title
-                }).ToList();
-
-                return View(model);
+            if (await IsReservationOccupied(model.Reservation))
+            {
+                ModelState.AddModelError(string.Empty, "The reservation is occupied for the selected dates.");
+                _logger.LogError("[ReservationController] The reservation is occupied for the selected dates");
             }
             else
             {
-                return BadRequest("Model state is not valid.");
+                var user = await _listingDbContext.Users.FindAsync(model.Reservation.UserId);
+                var listing = await _listingDbContext.Listings.FindAsync(model.Reservation.ListingId);
+
+                if (user == null)
+                {
+                    ModelState.AddModelError("Reservation.UserId", "User not found.");
+                    _logger.LogError("[ReservationController] User not found");
+                }
+
+                if (listing == null)
+                {
+                    ModelState.AddModelError("Reservation.ListingId", "Please select a listing.");
+                    _logger.LogError("[ReservationController] Listing not found");
+                }
+
+                if (user != null && listing != null)
+                {
+                    _listingDbContext.Reservations.Add(model.Reservation);
+                    await _listingDbContext.SaveChangesAsync();
+                    return RedirectToAction(nameof(Table));
+                }
             }
         }
-        catch (Exception e)
-        {
-            _logger.LogError(
-                $"[ReservationController] Reservation creation failed for listing {model.Reservation.ListingId}, error message: {e.Message}");
-            return BadRequest("Error creating reservation.");
-        }
     }
+    catch (Exception e)
+    {
+        _logger.LogError(
+            $"[ReservationController] Reservation creation failed for listing {model.Reservation.ListingId}, error message: {e.Message}");
+        ModelState.AddModelError(string.Empty, "Error creating reservation.");
+    }
+
+    // Load lists for dropdowns in case of error
+    model.UserSelectList = await _listingDbContext.Users.Select(user => new SelectListItem
+    {
+        Value = user.Id.ToString(),
+        Text = user.UserName
+    }).ToListAsync();
+
+    model.ListingSelectList = await _listingDbContext.Listings.Select(listing => new SelectListItem
+    {
+        Value = listing.ListingId.ToString(),
+        Text = listing.Title
+    }).ToListAsync();
+
+    return View(model);
+}
+
 
 
     [HttpGet]

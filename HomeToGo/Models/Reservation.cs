@@ -14,6 +14,7 @@ namespace HomeToGo.Models
         public string UserId { get; set; }
         public virtual IdentityUser User { get; set; }
         public int ListingId { get; set; }
+        
         public virtual Listing Listing { set; get; } = default!;
         
         [DataType(DataType.Date)]
