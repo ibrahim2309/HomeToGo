@@ -5,11 +5,11 @@
 
 @foreach (var reservation in Model)
 {
-    <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 20px;">
+    <div class="reservation-container">
         <div class="container">
             <h5>Reservation @reservation.ReservationId </h5>
             <div>
-                <table class='table table-striped' style='max-width: 1200px;'>
+                <table class="reservation-table">
                     <tr class="table-header">
                         <th>Order Date</th>
                         <th>User</th>
@@ -37,7 +37,9 @@
 }
 
 <p>
-    <a class="btn btn-secondary"
-       asp-controller="Reservation"
-       asp-action="CreateReservation">Create New reservation</a>
+    <a class="create-reservation-button"
+            asp-controller="Reservation"
+            asp-action="CreateReservation">
+        Create New reservation
+    </a>
 </p>
