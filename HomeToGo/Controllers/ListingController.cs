@@ -7,33 +7,29 @@ using Serilog;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 
-
 namespace HomeToGo.Controllers;
 
+// Controller for handling listings-related actions
 public class ListingController : Controller
 {
+    // Injecting required services and repositories
     private readonly IListingRepository _listingRepository;
     private readonly ILogger<ListingController> _logger;
     private readonly UserManager<IdentityUser> _userManager;
-    public ListingController(IListingRepository listingRepository, 
-        ILogger<ListingController> logger, 
-        UserManager<IdentityUser> userManager)
+
+    public ListingController(IListingRepository listingRepository, ILogger<ListingController> logger, UserManager<IdentityUser> userManager)
     {
-        _listingRepository = listingRepository;
-        _logger = logger;
-        _userManager = userManager;
+        _listingRepository = listingRepository ?? throw new ArgumentNullException(nameof(listingRepository));
+        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+        _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
     }
-    
+
+    // Displays all listings in a table format
     public async Task<IActionResult> Table()
     {
-        
         var listings = await _listingRepository.GetAll();
         if (listings == null)
         {
@@ -44,6 +40,7 @@ public class ListingController : Controller
         return View(listingListViewModel);
     }
 
+    // Displays all listings in a grid format
     public async Task<IActionResult> Grid()
     {
         var listings = await _listingRepository.GetAll();
@@ -56,6 +53,7 @@ public class ListingController : Controller
         return View(listingListViewModel);
     }
 
+    // Displays details for a specific listing
     public async Task<IActionResult> Details(int id)
     {
         var listing = await _listingRepository.GetListingById(id);
@@ -68,6 +66,7 @@ public class ListingController : Controller
         return View(listing);
     }
 
+    // Presents the form for creating a new listing
     [HttpGet]
     [Authorize]
     public IActionResult Create()
@@ -75,27 +74,28 @@ public class ListingController : Controller
         return View();
     }
 
+    // Handles the submission of the new listing form
     [HttpPost]
     [Authorize]
     public async Task<IActionResult> Create(Listing listing)
     {
         if (ModelState.IsValid)
         {
-            listing.UserId = _userManager.GetUserId(User); 
+            listing.UserId = _userManager.GetUserId(User); // Setting the UserId for the listing
             bool returnOk = await _listingRepository.Create(listing);
-            if (returnOk)   
+            if (returnOk)
                 return RedirectToAction(nameof(Table));
         }
         _logger.LogWarning("[ListingController] Listing creation failed {@listing}", listing);
         return View(listing);
-
     }
 
+    // Presents the form for updating an existing listing
     [HttpGet]
-   // [Authorize]
+    [Authorize]
     public async Task<IActionResult> Update(int id)
-   {
-       var listing = await _listingRepository.GetListingById(id);
+    {
+        var listing = await _listingRepository.GetListingById(id);
         if (listing == null)
         {
             _logger.LogError("[ListingController] Listing not found when updating the ListingId {ListingId:0000}", id);
@@ -105,25 +105,27 @@ public class ListingController : Controller
         return View(listing);
     }
 
+    // Handles the submission of the update listing form
     [HttpPost]
-  [Authorize]
+    [Authorize]
     public async Task<IActionResult> Update(Listing listing)
     {
         if (ModelState.IsValid)
         {
             bool returnOk = await _listingRepository.Update(listing);
             if (returnOk)
-               return RedirectToAction(nameof(Table));
+                return RedirectToAction(nameof(Table));
         }
         _logger.LogWarning("[ListingController] Listing update failed {@listing}", listing);
         return View(listing);
     }
 
+    // Presents the confirmation form for deleting a listing
     [HttpGet]
     [Authorize]
     public async Task<IActionResult> Delete(int id)
-   {
-       var listing = await _listingRepository.GetListingById(id);
+    {
+        var listing = await _listingRepository.GetListingById(id);
         if (listing == null)
         {
             _logger.LogError("[ListingController] Listing not found for the ListingId {ListingId:0000}", id);
@@ -131,9 +133,9 @@ public class ListingController : Controller
         }
 
         return View(listing);
-        
     }
 
+    // Handles the confirmation of listing deletion
     [HttpPost]
     [Authorize]
     public async Task<IActionResult> DeleteConfirmed(int id)
@@ -145,14 +147,7 @@ public class ListingController : Controller
             return BadRequest("Listing deletion failed");
         }
 
-        await _listingRepository.Delete(id); 
+        await _listingRepository.Delete(id);
         return RedirectToAction(nameof(Table));
-       
     }
 }
-
-
-
-
-
- 

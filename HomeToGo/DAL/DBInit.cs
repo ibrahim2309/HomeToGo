@@ -48,7 +48,7 @@ public static class DBInit
                     ListingId = 1,
                     Title = "Tjuvholem, Penthouse",
                     Address = "Osloveien 36",
-                    Price = 2500,
+                    Price = 1200,
                     Description = "This apartment at Tjuvholmen impresses with its modern style and exclusive location, right by Oslo’s waterfront",
                     UserId = oleUser.Id,
                     ImageUrl = "/Images/Ap1.jpg"
@@ -60,7 +60,7 @@ public static class DBInit
                     ListingId = 2,
                     Title = "Modern Apartment in Pilestredet",
                     Address = "Pilistredet 32",
-                    Price = 500,
+                    Price = 400,
                     Description = "This modern apartment in Pilestredet is perfect for those who wish to live centrally in Oslo.\"",
                     UserId = oleUser.Id,
                     ImageUrl = "/Images/Ap3.jpg"
@@ -70,7 +70,7 @@ public static class DBInit
                     ListingId = 3,
                     Title = "Montebello, Villa",
                     Address = "Montebello gate 1",
-                    Price = 4500,
+                    Price = 2500,
                     Description = "This spacious villa in Montebello combines luxury and comfort..",
                     UserId = oleUser.Id,
                     ImageUrl = "/Images/Ap4.jpg"
@@ -80,7 +80,7 @@ public static class DBInit
                     ListingId = 4,
                     Title = "Frogener, Hageby",
                     Address = "Frogner Veien 43",
-                    Price = 300,
+                    Price = 1600,
                     Description = "Single-family homes in Frogner Hageby in Oslo are renowned for their idyllic and lush atmosphere.",
                     UserId = oleUser.Id,
                     ImageUrl = "/Images/Ap5.jpg"
@@ -90,7 +90,7 @@ public static class DBInit
                     ListingId = 5,
                     Title = "Zanzibar, Beach house",
                     Address = "Zanzi 73",
-                    Price = 960,
+                    Price = 3500,
                     Description = "This beach house in Zanzibar offers stunning ocean views, perfect for a relaxing holiday..",
                     UserId = larsUser.Id,
                     ImageUrl = "/Images/Ap6.jpg"
@@ -106,7 +106,7 @@ public static class DBInit
         
         if (!context.Reservations.Any())
         {
-            var reservations = new List<Reservation> // Note the change here from 'reservation' to 'reservations'
+            var reservations = new List<Reservation> 
             {
                 new Reservation()
                 {
@@ -130,12 +130,12 @@ public static class DBInit
                 {
                     ReservationId = 3,
                     UserId = larsUser.Id,
-                    ListingId = 1, 
+                    ListingId = 5, 
                     CheckInDate = DateTime.Now.AddDays(1),
                     CheckOutDate = DateTime.Now.AddDays(7),
                     TotalPrice = 700 
                 }
-            };  // <- The missing semicolon and closing brace are added here.
+            }; 
 
             context.AddRange(reservations);
             context.SaveChanges();

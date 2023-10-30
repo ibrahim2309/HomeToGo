@@ -82,10 +82,10 @@ public class ListingRepository : IListingRepository
             
             var listing = await _db.Listings.FindAsync(id);
                 if (listing == null)
-                    {
-                        _logger.LogError("[ListingRepository] listing not found for the ListingId {ListingId:0000}", id);
-                        return false;
-                    }
+                {
+                    _logger.LogError("[ListingRepository] listing not found for the ListingId {ListingId:0000}", id);
+                    return false;
+                }
             
             _db.Listings.Remove(listing);
             await _db.SaveChangesAsync();
