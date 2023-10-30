@@ -2,6 +2,9 @@
   font-size: 14px;
 }
 
+*{
+  scroll-behavior: smooth;
+}
 @media (min-width: 768px) {
   html {
     font-size: 16px;
@@ -16,5 +19,271 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+
+.text-center {
+  text-align: center;
+  padding: 50px 0;
+}
+
+.display-4 {
+  font-size: 3em;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.display-6 {
+  font-size: 1.5em;
+  color: #7d7d7d;
+  margin-bottom: 10px;
+}
+
+#carouselImages {
+  position: relative;
+  margin: auto;
+  width: 80%;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+}
+
+.carousel-item img {
+  border-radius: 15px;
+}
+
+.carousel-indicators button {
+  background-color: #7d7d7d;
+}
+
+.carousel-indicators .active {
+  background-color: red;
+}
+
+.carousel-item {
+  position: relative;
+}
+
+.book-button {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  z-index: 1000; 
+  text-decoration: none;
+
+}
+
+.book-button:hover {
+  background-color: darkred;
+}
+
+.text-center {
+  text-align: center;
+  padding: 50px 0;
+}
+
+.display-4 {
+  font-size: 3em;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.display-6 {
+  font-size: 1.5em;
+  color: #7d7d7d;
+  margin-bottom: 10px;
+}
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  padding: 20px;
+  justify-content: center;
+}
+
+.card1 {
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  overflow: hidden;
+  width: 300px;
+  transition: transform 0.3s;
+}
+
+.card-content {
+  padding: 20px;
+}
+
+.card:hover {
+  transform: translateY(-10px);
+}
+
+
+/* Navbar Styles */
+.navbar {
+  background-color: #f8f9fa;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+}
+
+.navbar .navbar-brand {
+  font-weight: bold;
+  font-size: 1.5em;
+}
+
+.navbar .nav-link {
+  color: #333;
+  padding: 1em;
+  transition: color 0.3s;
+}
+
+.navbar .nav-link:hover {
+  color: #007BFF;  
+}
+
+.icon {
+  height: 40px;
+  width: 40px;
+  margin-right: 10px;
+}
+
+.login-partial {
+  
+}
+
+/* Footer Styles */
+.footer {
+  background-color: #f8f9fa;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  padding: 3px;
+  font-size: 16px;
+  text-align: center;
+}
+
+.footer a {
+  color: #333;
+  text-decoration: none;
+  margin: 0 10px;
+  transition: color 0.3s;
+}
+
+.footer a:hover {
+  color: #007BFF;  
+}
+
+.container {
+  margin-bottom: 0px;
+}
+
+
+/* Reservation Styles */
+.reservation-container {
+  background-color: #f8f9fa;
+  padsding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.reservation-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.reservation-table th, .reservation-table td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.reservation-table th {
+  background-color: #e0e0e0;
+}
+
+.reservation-table tr:hover {
+  background-color: #f1f1f1;
+}
+
+.create-reservation-button {
+  background-color: #007BFF;  /* Adjust this color to match your brand */
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+  text-decoration: none;
+}
+
+
+.delete-button {
+  background-color: #dc3545;
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.delete-button:hover {
+  background-color: #c82333;
+}
+
+
+.container-user {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* Table Styles */
+.table-user {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.table-user th, .table-user td {
+  padding: 12px 15px;
+  text-align: left;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.table-user th {
+  background-color: #f5f5f7;
+  color: #999;
+}
+
+.table-user tr:hover {
+  background-color: #f1f1f1;
+}
+
+.table-user tr:last-child td {
+  border-bottom: none;  /* Removes border from the last row */
+}
+
+.table-user thead tr {
+  border-bottom: 2px solid #e0e0e0;  /* Adds a thicker border below the header row */
+}
+
+
 
 
