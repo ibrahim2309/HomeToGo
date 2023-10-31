@@ -2,6 +2,7 @@ using HomeToGo.Models;
 
 namespace HomeToGo.DAL;
 
+//Interface for ListingRepository
 public interface IListingRepository
 {
     Task<IEnumerable<Listing>> GetAll();

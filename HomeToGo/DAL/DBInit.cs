@@ -132,7 +132,7 @@ public static class DBInit
                     UserId = larsUser.Id,
                     ListingId = 5, 
                     CheckInDate = DateTime.Now.AddDays(1),
-                    CheckOutDate = DateTime.Now.AddDays(7),
+                    CheckOutDate = DateTime.Now.AddDays(5),
                     TotalPrice = 700 
                 }
             }; 
